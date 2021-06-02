@@ -4,7 +4,7 @@
 ;;; Don't parse this file wihout knowing GCC gengtype internals.
 ;;; This file should be parsed by the same gengtype which wrote it.
 
-(!version  "11.1.1 20210522")
+(!version  "11.1.1 20210602")
 (!srcdir  "../../gcc/gcc")
 (!languages 11 ada brig c cp d fortran go jit lto objc objcp)
 (!fileslist 225
@@ -29165,7 +29165,7 @@
   nil 0 nil nil )
  
  (!type struct 2201 nil  gc_used "module_hasher"
-  (!srcfileloc  "fortran/trans-decl.c" 5168)
+  (!srcfileloc  "fortran/trans-decl.c" 5169)
   (!fields 0 )
   nil 32 nil nil )
  
@@ -29174,11 +29174,11 @@
    (!type already_seen 2202)
   )
   gc_pointed_to "hash_table<module_hasher>"
-  (!srcfileloc  "fortran/trans-decl.c" 5168)
+  (!srcfileloc  "fortran/trans-decl.c" 5169)
   (!fields 1 
    (!pair  "module_hasher"
     (!type already_seen 2201)
-    (!srcfileloc  "fortran/trans-decl.c" 5168)
+    (!srcfileloc  "fortran/trans-decl.c" 5169)
     nil )
   )
  )
@@ -29954,11 +29954,11 @@
   nil )
  (!pair  "module_hasher"
   (!type already_seen 2201)
-  (!srcfileloc  "fortran/trans-decl.c" 5168)
+  (!srcfileloc  "fortran/trans-decl.c" 5169)
   nil )
  (!pair  "hash_table<module_hasher>"
   (!type already_seen 2202)
-  (!srcfileloc  "fortran/trans-decl.c" 5168)
+  (!srcfileloc  "fortran/trans-decl.c" 5169)
   nil )
  (!pair  "tree_frame_info"
   (!type already_seen 650)
@@ -34247,7 +34247,7 @@
   nil )
  (!pair  "module_htab"
   (!type already_seen 2203)
-  (!srcfileloc  "fortran/trans-decl.c" 5168)
+  (!srcfileloc  "fortran/trans-decl.c" 5169)
   nil )
  (!pair  "saved_local_decls"
   (!type already_seen 23)
@@ -34900,7 +34900,7 @@
   nil )
  (!pair  "default_arg_context"
   (!type already_seen 84)
-  (!srcfileloc  "cp/call.c" 8326)
+  (!srcfileloc  "cp/call.c" 8331)
   nil )
  (!pair  "unemitted_tinfo_decls"
   (!type already_seen 84)
@@ -35349,7 +35349,7 @@
   nil )
  (!pair  "alloc_object_size_limit"
   (!type already_seen 23)
-  (!srcfileloc  "calls.c" 1225)
+  (!srcfileloc  "calls.c" 1226)
   nil )
  (!pair  "internal_fn_fnspec_array"
   (!type array 2323 nil  gc_used "IFN_LAST + 1" 
