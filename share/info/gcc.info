@@ -50586,6 +50586,21 @@ __BUILTIN_CRYPTO_VSHASIGMAW must be a constant integer that is 0 or 1.
 The third argument to these built-in functions must be a constant
 integer in the range of 0 to 15.
 
+ The following sign extension builtins are provided:
+
+     vector signed int vec_signexti (vector signed char a)
+     vector signed long long vec_signextll (vector signed char a)
+     vector signed int vec_signexti (vector signed short a)
+     vector signed long long vec_signextll (vector signed short a)
+     vector signed long long vec_signextll (vector signed int a)
+     vector signed long long vec_signextq (vector signed long long a)
+
+ Each element of the result is produced by sign-extending the element of
+the input vector that would fall in the least significant portion of the
+result element.  For example, a sign-extension of a vector signed char
+to a vector signed long long will sign extend the rightmost byte of each
+doubleword.
+
 
 File: gcc.info,  Node: PowerPC AltiVec Built-in Functions Available on ISA 3.1,  Prev: PowerPC AltiVec Built-in Functions Available on ISA 3.0,  Up: PowerPC AltiVec/VSX Built-in Functions
 
@@ -51102,6 +51117,157 @@ perform <anything> ÷ 0 then the remainder is undefined.
 'xxgenpcvbm', 'xxgenpcvhm', 'xxgenpcvwm' instructions, where immediate
 value is either 0, 1, 2 or 3.
 
+vector unsigned __int128 vec_rl (vector unsigned __int128 A,
+                                              vector unsigned __int128 B);
+vector signed __int128 vec_rl (vector signed __int128 A,
+                                            vector unsigned __int128 B);
+
+ Result value: Each element of R is obtained by rotating the
+corresponding element of A left by the number of bits specified by the
+corresponding element of B.
+
+vector unsigned __int128 vec_rlmi (vector unsigned __int128,
+                                                vector unsigned __int128,
+                                                vector unsigned __int128);
+vector signed __int128 vec_rlmi (vector signed __int128,
+                                              vector signed __int128,
+                                              vector unsigned __int128);
+
+ Returns the result of rotating the first input and inserting it under
+mask into the second input.  The first bit in the mask, the last bit in
+the mask are obtained from the two 7-bit fields bits [108:115] and bits
+[117:123] respectively of the second input.  The shift is obtained from
+the third input in the 7-bit field [125:131] where all bits counted from
+zero at the left.
+
+vector unsigned __int128 vec_rlnm (vector unsigned __int128,
+                                                vector unsigned __int128,
+                                                vector unsigned __int128);
+vector signed __int128 vec_rlnm (vector signed __int128,
+                                              vector unsigned __int128,
+                                              vector unsigned __int128);
+
+ Returns the result of rotating the first input and ANDing it with a
+mask.  The first bit in the mask and the last bit in the mask are
+obtained from the two 7-bit fields bits [117:123] and bits [125:131]
+respectively of the second input.  The shift is obtained from the third
+input in the 7-bit field bits [125:131] where all bits counted from zero
+at the left.
+
+vector unsigned __int128 vec_sl(vector unsigned __int128 A, vector unsigned __int128 B);
+vector signed __int128 vec_sl(vector signed __int128 A, vector unsigned __int128 B);
+
+ Result value: Each element of R is obtained by shifting the
+corresponding element of A left by the number of bits specified by the
+corresponding element of B.
+
+vector unsigned __int128 vec_sr(vector unsigned __int128 A, vector unsigned __int128 B);
+vector signed __int128 vec_sr(vector signed __int128 A, vector unsigned __int128 B);
+
+ Result value: Each element of R is obtained by shifting the
+corresponding element of A right by the number of bits specified by the
+corresponding element of B.
+
+vector unsigned __int128 vec_sra(vector unsigned __int128 A, vector unsigned __int128 B);
+vector signed __int128 vec_sra(vector signed __int128 A, vector unsigned __int128 B);
+
+ Result value: Each element of R is obtained by arithmetic shifting the
+corresponding element of A right by the number of bits specified by the
+corresponding element of B.
+
+vector unsigned __int128 vec_mule (vector unsigned long long,
+                                                vector unsigned long long);
+vector signed __int128 vec_mule (vector signed long long,
+                                              vector signed long long);
+
+ Returns a vector containing a 128-bit integer result of multiplying the
+even doubleword elements of the two inputs.
+
+vector unsigned __int128 vec_mulo (vector unsigned long long,
+                                                vector unsigned long long);
+vector signed __int128 vec_mulo (vector signed long long,
+                                              vector signed long long);
+
+ Returns a vector containing a 128-bit integer result of multiplying the
+odd doubleword elements of the two inputs.
+
+vector unsigned __int128 vec_div (vector unsigned __int128,
+                                               vector unsigned __int128);
+vector signed __int128 vec_div (vector signed __int128,
+                                             vector signed __int128);
+
+ Returns the result of dividing the first operand by the second operand.
+An attempt to divide any value by zero or to divide the most negative
+signed 128-bit integer by negative one results in an undefined value.
+
+vector unsigned __int128 vec_dive (vector unsigned __int128,
+                                                vector unsigned __int128);
+vector signed __int128 vec_dive (vector signed __int128,
+                                              vector signed __int128);
+
+ The result is produced by shifting the first input left by 128 bits and
+dividing by the second.  If an attempt is made to divide by zero or the
+result is larger than 128 bits, the result is undefined.
+
+vector unsigned __int128 vec_mod (vector unsigned __int128,
+                                               vector unsigned __int128);
+vector signed __int128 vec_mod (vector signed __int128,
+                                             vector signed __int128);
+
+ The result is the modulo result of dividing the first input by the
+second input.
+
+ The following builtins perform 128-bit vector comparisons.  The
+'vec_all_xx', 'vec_any_xx', and 'vec_cmpxx', where 'xx' is one of the
+operations 'eq, ne, gt, lt, ge, le' perform pairwise comparisons between
+the elements at the same positions within their two vector arguments.
+The 'vec_all_xx'function returns a non-zero value if and only if all
+pairwise comparisons are true.  The 'vec_any_xx' function returns a
+non-zero value if and only if at least one pairwise comparison is true.
+The 'vec_cmpxx'function returns a vector of the same type as its two
+arguments, within which each element consists of all ones to denote that
+specified logical comparison of the corresponding elements was true.
+Otherwise, the element of the returned vector contains all zeros.
+
+     vector bool __int128 vec_cmpeq (vector signed __int128, vector signed __int128);
+     vector bool __int128 vec_cmpeq (vector unsigned __int128, vector unsigned __int128);
+     vector bool __int128 vec_cmpne (vector signed __int128, vector signed __int128);
+     vector bool __int128 vec_cmpne (vector unsigned __int128, vector unsigned __int128);
+     vector bool __int128 vec_cmpgt (vector signed __int128, vector signed __int128);
+     vector bool __int128 vec_cmpgt (vector unsigned __int128, vector unsigned __int128);
+     vector bool __int128 vec_cmplt (vector signed __int128, vector signed __int128);
+     vector bool __int128 vec_cmplt (vector unsigned __int128, vector unsigned __int128);
+     vector bool __int128 vec_cmpge (vector signed __int128, vector signed __int128);
+     vector bool __int128 vec_cmpge (vector unsigned __int128, vector unsigned __int128);
+     vector bool __int128 vec_cmple (vector signed __int128, vector signed __int128);
+     vector bool __int128 vec_cmple (vector unsigned __int128, vector unsigned __int128);
+
+     int vec_all_eq (vector signed __int128, vector signed __int128);
+     int vec_all_eq (vector unsigned __int128, vector unsigned __int128);
+     int vec_all_ne (vector signed __int128, vector signed __int128);
+     int vec_all_ne (vector unsigned __int128, vector unsigned __int128);
+     int vec_all_gt (vector signed __int128, vector signed __int128);
+     int vec_all_gt (vector unsigned __int128, vector unsigned __int128);
+     int vec_all_lt (vector signed __int128, vector signed __int128);
+     int vec_all_lt (vector unsigned __int128, vector unsigned __int128);
+     int vec_all_ge (vector signed __int128, vector signed __int128);
+     int vec_all_ge (vector unsigned __int128, vector unsigned __int128);
+     int vec_all_le (vector signed __int128, vector signed __int128);
+     int vec_all_le (vector unsigned __int128, vector unsigned __int128);
+
+     int vec_any_eq (vector signed __int128, vector signed __int128);
+     int vec_any_eq (vector unsigned __int128, vector unsigned __int128);
+     int vec_any_ne (vector signed __int128, vector signed __int128);
+     int vec_any_ne (vector unsigned __int128, vector unsigned __int128);
+     int vec_any_gt (vector signed __int128, vector signed __int128);
+     int vec_any_gt (vector unsigned __int128, vector unsigned __int128);
+     int vec_any_lt (vector signed __int128, vector signed __int128);
+     int vec_any_lt (vector unsigned __int128, vector unsigned __int128);
+     int vec_any_ge (vector signed __int128, vector signed __int128);
+     int vec_any_ge (vector unsigned __int128, vector unsigned __int128);
+     int vec_any_le (vector signed __int128, vector signed __int128);
+     int vec_any_le (vector unsigned __int128, vector unsigned __int128);
+
 
 File: gcc.info,  Node: PowerPC Hardware Transactional Memory Built-in Functions,  Next: PowerPC Atomic Memory Operation Functions,  Prev: PowerPC AltiVec/VSX Built-in Functions,  Up: Target Builtins
 
@@ -51462,10 +51628,10 @@ they are constants and that their values are within range.
      void __builtin_mma_xxmfacc (__vector_quad *);
      void __builtin_mma_xxsetaccz (__vector_quad *);
 
-     void __builtin_mma_assemble_acc (__vector_quad *, vec_t, vec_t, vec_t, vec_t);
+     void __builtin_mma_build_acc (__vector_quad *, vec_t, vec_t, vec_t, vec_t);
      void __builtin_mma_disassemble_acc (void *, __vector_quad *);
 
-     void __builtin_vsx_assemble_pair (__vector_pair *, vec_t, vec_t);
+     void __builtin_vsx_build_pair (__vector_pair *, vec_t, vec_t);
      void __builtin_vsx_disassemble_pair (void *, __vector_pair *);
 
      vec_t __builtin_vsx_xvcvspbf16 (vec_t);
@@ -68728,128 +68894,128 @@ Node: PowerPC AltiVec Built-in Functions on ISA 2.052075813
 Node: PowerPC AltiVec Built-in Functions Available on ISA 2.062101213
 Node: PowerPC AltiVec Built-in Functions Available on ISA 2.072108279
 Node: PowerPC AltiVec Built-in Functions Available on ISA 3.02118089
-Node: PowerPC AltiVec Built-in Functions Available on ISA 3.12133061
-Node: PowerPC Hardware Transactional Memory Built-in Functions2157655
-Node: PowerPC Atomic Memory Operation Functions2166170
-Node: PowerPC Matrix-Multiply Assist Built-in Functions2168733
-Node: PRU Built-in Functions2174726
-Node: RISC-V Built-in Functions2175914
-Node: RX Built-in Functions2176325
-Node: S/390 System z Built-in Functions2180327
-Node: SH Built-in Functions2185557
-Node: SPARC VIS Built-in Functions2187285
-Node: TI C6X Built-in Functions2195816
-Node: TILE-Gx Built-in Functions2196847
-Node: TILEPro Built-in Functions2197966
-Node: x86 Built-in Functions2199066
-Node: x86 transactional memory intrinsics2263146
-Node: x86 control-flow protection intrinsics2266413
-Node: Target Format Checks2268184
-Node: Solaris Format Checks2268616
-Node: Darwin Format Checks2269042
-Node: Pragmas2270005
-Node: AArch64 Pragmas2270946
-Node: ARM Pragmas2271403
-Node: M32C Pragmas2272030
-Node: MeP Pragmas2273102
-Node: PRU Pragmas2275154
-Node: RS/6000 and PowerPC Pragmas2275732
-Node: S/390 Pragmas2276472
-Node: Darwin Pragmas2277038
-Node: Solaris Pragmas2278091
-Node: Symbol-Renaming Pragmas2279255
-Node: Structure-Layout Pragmas2280892
-Node: Weak Pragmas2283172
-Node: Diagnostic Pragmas2283907
-Node: Visibility Pragmas2288098
-Node: Push/Pop Macro Pragmas2288783
-Node: Function Specific Option Pragmas2289756
-Node: Loop-Specific Pragmas2291722
-Node: Unnamed Fields2293322
-Node: Thread-Local2295519
-Node: C99 Thread-Local Edits2297625
-Node: C++98 Thread-Local Edits2299623
-Node: Binary constants2303068
-Node: C++ Extensions2303739
-Node: C++ Volatiles2305369
-Node: Restricted Pointers2307717
-Node: Vague Linkage2309308
-Node: C++ Interface2312931
-Ref: C++ Interface-Footnote-12316728
-Node: Template Instantiation2316866
-Node: Bound member functions2322957
-Node: C++ Attributes2324489
-Node: Function Multiversioning2328561
-Node: Type Traits2330368
-Node: C++ Concepts2337318
-Node: Deprecated Features2338824
-Node: Backwards Compatibility2340649
-Node: Objective-C2341721
-Node: GNU Objective-C runtime API2342328
-Node: Modern GNU Objective-C runtime API2343335
-Node: Traditional GNU Objective-C runtime API2345771
-Node: Executing code before main2346498
-Node: What you can and what you cannot do in +load2349242
-Node: Type encoding2351612
-Node: Legacy type encoding2356753
-Node: @encode2357843
-Node: Method signatures2358388
-Node: Garbage Collection2360380
-Node: Constant string objects2363070
-Node: compatibility_alias2365579
-Node: Exceptions2366304
-Node: Synchronization2369014
-Node: Fast enumeration2370198
-Node: Using fast enumeration2370510
-Node: c99-like fast enumeration syntax2371721
-Node: Fast enumeration details2372424
-Node: Fast enumeration protocol2374764
-Node: Messaging with the GNU Objective-C runtime2377916
-Node: Dynamically registering methods2379288
-Node: Forwarding hook2380979
-Node: Compatibility2384019
-Node: Gcov2390575
-Node: Gcov Intro2391110
-Node: Invoking Gcov2393828
-Node: Gcov and Optimization2416694
-Node: Gcov Data Files2420437
-Node: Cross-profiling2421846
-Node: Gcov-tool2423700
-Node: Gcov-tool Intro2424125
-Node: Invoking Gcov-tool2426095
-Node: Gcov-dump2428673
-Node: Gcov-dump Intro2428996
-Node: Invoking Gcov-dump2429263
-Node: lto-dump2429920
-Node: lto-dump Intro2430219
-Node: Invoking lto-dump2430469
-Node: Trouble2431565
-Node: Actual Bugs2432982
-Node: Interoperation2433429
-Node: Incompatibilities2440320
-Node: Fixed Headers2448472
-Node: Standard Libraries2450130
-Node: Disappointments2451502
-Node: C++ Misunderstandings2455861
-Node: Static Definitions2456672
-Node: Name lookup2457725
-Ref: Name lookup-Footnote-12462506
-Node: Temporaries2462695
-Node: Copy Assignment2464671
-Node: Non-bugs2466478
-Node: Warnings and Errors2476984
-Node: Bugs2478746
-Node: Bug Criteria2479213
-Node: Bug Reporting2481423
-Node: Service2481641
-Node: Contributing2482461
-Node: Funding2483202
-Node: GNU Project2485692
-Node: Copying2486338
-Node: GNU Free Documentation License2523846
-Node: Contributors2548964
-Node: Option Index2589937
-Node: Keyword Index2879795
+Node: PowerPC AltiVec Built-in Functions Available on ISA 3.12133806
+Node: PowerPC Hardware Transactional Memory Built-in Functions2167029
+Node: PowerPC Atomic Memory Operation Functions2175544
+Node: PowerPC Matrix-Multiply Assist Built-in Functions2178107
+Node: PRU Built-in Functions2184094
+Node: RISC-V Built-in Functions2185282
+Node: RX Built-in Functions2185693
+Node: S/390 System z Built-in Functions2189695
+Node: SH Built-in Functions2194925
+Node: SPARC VIS Built-in Functions2196653
+Node: TI C6X Built-in Functions2205184
+Node: TILE-Gx Built-in Functions2206215
+Node: TILEPro Built-in Functions2207334
+Node: x86 Built-in Functions2208434
+Node: x86 transactional memory intrinsics2272514
+Node: x86 control-flow protection intrinsics2275781
+Node: Target Format Checks2277552
+Node: Solaris Format Checks2277984
+Node: Darwin Format Checks2278410
+Node: Pragmas2279373
+Node: AArch64 Pragmas2280314
+Node: ARM Pragmas2280771
+Node: M32C Pragmas2281398
+Node: MeP Pragmas2282470
+Node: PRU Pragmas2284522
+Node: RS/6000 and PowerPC Pragmas2285100
+Node: S/390 Pragmas2285840
+Node: Darwin Pragmas2286406
+Node: Solaris Pragmas2287459
+Node: Symbol-Renaming Pragmas2288623
+Node: Structure-Layout Pragmas2290260
+Node: Weak Pragmas2292540
+Node: Diagnostic Pragmas2293275
+Node: Visibility Pragmas2297466
+Node: Push/Pop Macro Pragmas2298151
+Node: Function Specific Option Pragmas2299124
+Node: Loop-Specific Pragmas2301090
+Node: Unnamed Fields2302690
+Node: Thread-Local2304887
+Node: C99 Thread-Local Edits2306993
+Node: C++98 Thread-Local Edits2308991
+Node: Binary constants2312436
+Node: C++ Extensions2313107
+Node: C++ Volatiles2314737
+Node: Restricted Pointers2317085
+Node: Vague Linkage2318676
+Node: C++ Interface2322299
+Ref: C++ Interface-Footnote-12326096
+Node: Template Instantiation2326234
+Node: Bound member functions2332325
+Node: C++ Attributes2333857
+Node: Function Multiversioning2337929
+Node: Type Traits2339736
+Node: C++ Concepts2346686
+Node: Deprecated Features2348192
+Node: Backwards Compatibility2350017
+Node: Objective-C2351089
+Node: GNU Objective-C runtime API2351696
+Node: Modern GNU Objective-C runtime API2352703
+Node: Traditional GNU Objective-C runtime API2355139
+Node: Executing code before main2355866
+Node: What you can and what you cannot do in +load2358610
+Node: Type encoding2360980
+Node: Legacy type encoding2366121
+Node: @encode2367211
+Node: Method signatures2367756
+Node: Garbage Collection2369748
+Node: Constant string objects2372438
+Node: compatibility_alias2374947
+Node: Exceptions2375672
+Node: Synchronization2378382
+Node: Fast enumeration2379566
+Node: Using fast enumeration2379878
+Node: c99-like fast enumeration syntax2381089
+Node: Fast enumeration details2381792
+Node: Fast enumeration protocol2384132
+Node: Messaging with the GNU Objective-C runtime2387284
+Node: Dynamically registering methods2388656
+Node: Forwarding hook2390347
+Node: Compatibility2393387
+Node: Gcov2399943
+Node: Gcov Intro2400478
+Node: Invoking Gcov2403196
+Node: Gcov and Optimization2426062
+Node: Gcov Data Files2429805
+Node: Cross-profiling2431214
+Node: Gcov-tool2433068
+Node: Gcov-tool Intro2433493
+Node: Invoking Gcov-tool2435463
+Node: Gcov-dump2438041
+Node: Gcov-dump Intro2438364
+Node: Invoking Gcov-dump2438631
+Node: lto-dump2439288
+Node: lto-dump Intro2439587
+Node: Invoking lto-dump2439837
+Node: Trouble2440933
+Node: Actual Bugs2442350
+Node: Interoperation2442797
+Node: Incompatibilities2449688
+Node: Fixed Headers2457840
+Node: Standard Libraries2459498
+Node: Disappointments2460870
+Node: C++ Misunderstandings2465229
+Node: Static Definitions2466040
+Node: Name lookup2467093
+Ref: Name lookup-Footnote-12471874
+Node: Temporaries2472063
+Node: Copy Assignment2474039
+Node: Non-bugs2475846
+Node: Warnings and Errors2486352
+Node: Bugs2488114
+Node: Bug Criteria2488581
+Node: Bug Reporting2490791
+Node: Service2491009
+Node: Contributing2491829
+Node: Funding2492570
+Node: GNU Project2495060
+Node: Copying2495706
+Node: GNU Free Documentation License2533214
+Node: Contributors2558332
+Node: Option Index2599305
+Node: Keyword Index2889163
 
 End Tag Table
 

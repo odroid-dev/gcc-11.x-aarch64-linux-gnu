@@ -4,7 +4,7 @@
 ;;; Don't parse this file wihout knowing GCC gengtype internals.
 ;;; This file should be parsed by the same gengtype which wrote it.
 
-(!version  "11.1.1 20210614")
+(!version  "11.1.1 20210702")
 (!srcdir  "../../gcc/gcc")
 (!languages 11 ada brig c cp d fortran go jit lto objc objcp)
 (!fileslist 225
@@ -22499,16 +22499,16 @@
   nil 0 nil nil )
  
  (!type struct 1349 nil  gc_unused "loc_list_hasher"
-  (!srcfileloc  "dwarf2out.c" 31401)
+  (!srcfileloc  "dwarf2out.c" 31425)
   (!fields 0 )
   nil 2047 nil nil )
  
  (!type user_struct 1350 nil  gc_unused "hash_table<loc_list_hasher>"
-  (!srcfileloc  "dwarf2out.c" 31401)
+  (!srcfileloc  "dwarf2out.c" 31425)
   (!fields 1 
    (!pair  "loc_list_hasher"
     (!type already_seen 1349)
-    (!srcfileloc  "dwarf2out.c" 31401)
+    (!srcfileloc  "dwarf2out.c" 31425)
     nil )
   )
  )
@@ -27537,7 +27537,7 @@
    (!type already_seen 1985)
   )
   gc_pointed_to "cp_parser"
-  (!srcfileloc  "cp/parser.c" 44839)
+  (!srcfileloc  "cp/parser.c" 44838)
   (!fields 38 
    (!pair  "lexer"
     (!type already_seen 1971)
@@ -28162,7 +28162,7 @@
   nil 0 nil nil )
  
  (!type struct 2053 nil  gc_used "typename_hasher"
-  (!srcfileloc  "cp/decl.c" 3948)
+  (!srcfileloc  "cp/decl.c" 3947)
   (!fields 0 )
   nil 1032 nil nil )
  
@@ -28171,11 +28171,11 @@
    (!type already_seen 2054)
   )
   gc_pointed_to "hash_table<typename_hasher>"
-  (!srcfileloc  "cp/decl.c" 3948)
+  (!srcfileloc  "cp/decl.c" 3947)
   (!fields 1 
    (!pair  "typename_hasher"
     (!type already_seen 2053)
-    (!srcfileloc  "cp/decl.c" 3948)
+    (!srcfileloc  "cp/decl.c" 3947)
     nil )
   )
  )
@@ -28829,7 +28829,7 @@
   nil 0 nil nil )
  
  (!type undefined 2146 nil  gc_unused "class_to_loc_map_t::iterator"
-  (!srcfileloc  "cp/parser.c" 32556)
+  (!srcfileloc  "cp/parser.c" 32554)
  )
  
  (!type struct 2147 
@@ -28909,15 +28909,15 @@
    (!type already_seen 2160)
   )
   gc_pointed_to "hash_map<tree,tree_pair_p>"
-  (!srcfileloc  "cp/pt.c" 29188)
+  (!srcfileloc  "cp/pt.c" 29199)
   (!fields 2 
    (!pair  "tree_pair_p"
     (!type already_seen 532)
-    (!srcfileloc  "cp/pt.c" 29188)
+    (!srcfileloc  "cp/pt.c" 29199)
     nil )
    (!pair  "tree"
     (!type already_seen 23)
-    (!srcfileloc  "cp/pt.c" 29188)
+    (!srcfileloc  "cp/pt.c" 29199)
     nil )
   )
  )
@@ -30050,7 +30050,7 @@
   nil )
  (!pair  "hash_map<tree,tree_pair_p>"
   (!type already_seen 2160)
-  (!srcfileloc  "cp/pt.c" 29188)
+  (!srcfileloc  "cp/pt.c" 29199)
   nil )
  (!pair  "pending_template"
   (!type already_seen 2147)
@@ -30078,15 +30078,15 @@
   nil )
  (!pair  "cp_parser"
   (!type already_seen 1985)
-  (!srcfileloc  "cp/parser.c" 44839)
+  (!srcfileloc  "cp/parser.c" 44838)
   nil )
  (!pair  "iter_t"
   (!type already_seen 2146)
-  (!srcfileloc  "cp/parser.c" 32556)
+  (!srcfileloc  "cp/parser.c" 32554)
   nil )
  (!pair  "class_to_loc_map_t::iterator"
   (!type already_seen 2146)
-  (!srcfileloc  "cp/parser.c" 32556)
+  (!srcfileloc  "cp/parser.c" 32554)
   nil )
  (!pair  "cp_parser_expression_stack"
   (!type array 2269 nil  gc_unused "NUM_PREC_VALUES" 
@@ -30322,11 +30322,11 @@
   nil )
  (!pair  "typename_hasher"
   (!type already_seen 2053)
-  (!srcfileloc  "cp/decl.c" 3948)
+  (!srcfileloc  "cp/decl.c" 3947)
   nil )
  (!pair  "hash_table<typename_hasher>"
   (!type already_seen 2054)
-  (!srcfileloc  "cp/decl.c" 3948)
+  (!srcfileloc  "cp/decl.c" 3947)
   nil )
  (!pair  "incomplete_var"
   (!type already_seen 2048)
@@ -31616,15 +31616,15 @@
   nil )
  (!pair  "loc_list_hash_type"
   (!type already_seen 1350)
-  (!srcfileloc  "dwarf2out.c" 31401)
+  (!srcfileloc  "dwarf2out.c" 31425)
   nil )
  (!pair  "loc_list_hasher"
   (!type already_seen 1349)
-  (!srcfileloc  "dwarf2out.c" 31401)
+  (!srcfileloc  "dwarf2out.c" 31425)
   nil )
  (!pair  "hash_table<loc_list_hasher>"
   (!type already_seen 1350)
-  (!srcfileloc  "dwarf2out.c" 31401)
+  (!srcfileloc  "dwarf2out.c" 31425)
   nil )
  (!pair  "macinfo_hash_type"
   (!type already_seen 1347)
@@ -34411,7 +34411,7 @@
   nil )
  (!pair  "dguide_cache"
   (!type already_seen 2161)
-  (!srcfileloc  "cp/pt.c" 29188)
+  (!srcfileloc  "cp/pt.c" 29199)
   (!options 
    (!option deletable string  "")
   )
@@ -34496,11 +34496,11 @@
   nil )
  (!pair  "generic_parm_count"
   (!type already_seen 2)
-  (!srcfileloc  "cp/parser.c" 45331)
+  (!srcfileloc  "cp/parser.c" 45330)
   nil )
  (!pair  "the_parser"
   (!type already_seen 1986)
-  (!srcfileloc  "cp/parser.c" 44839)
+  (!srcfileloc  "cp/parser.c" 44838)
   nil )
  (!pair  "cp_parser_decl_specs_attrs"
   (!type already_seen 84)
@@ -34684,18 +34684,18 @@
   nil )
  (!pair  "start_cleanup_cnt"
   (!type already_seen 2)
-  (!srcfileloc  "cp/decl.c" 8981)
+  (!srcfileloc  "cp/decl.c" 8980)
   nil )
  (!pair  "decomp_type_table"
   (!type already_seen 925)
-  (!srcfileloc  "cp/decl.c" 8434)
+  (!srcfileloc  "cp/decl.c" 8433)
   (!options 
    (!option cache string  "")
   )
  )
  (!pair  "typename_htab"
   (!type already_seen 2055)
-  (!srcfileloc  "cp/decl.c" 3948)
+  (!srcfileloc  "cp/decl.c" 3947)
   nil )
  (!pair  "local_entities"
   (!type already_seen 84)
