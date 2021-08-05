@@ -1,6 +1,6 @@
 This is libc.info, produced by makeinfo version 6.7 from libc.texinfo.
 
-This is ‘The GNU C Library Reference Manual’, for version 2.33.
+This is ‘The GNU C Library Reference Manual’, for version 2.34.
 
    Copyright © 1993–2021 Free Software Foundation, Inc.
 
@@ -43,7 +43,8 @@ START-INFO-DIR-ENTRY
 * CLOCK_REALTIME: (libc)Getting the Time.
 * COLL_WEIGHTS_MAX: (libc)Utility Limits.
 * CPU_CLR: (libc)CPU Affinity.
-* CPU_FEATURE_USABLE: (libc)X86.
+* CPU_FEATURE_ACTIVE: (libc)X86.
+* CPU_FEATURE_PRESENT: (libc)X86.
 * CPU_ISSET: (libc)CPU Affinity.
 * CPU_SET: (libc)CPU Affinity.
 * CPU_SETSIZE: (libc)CPU Affinity.
@@ -246,7 +247,6 @@ START-INFO-DIR-ENTRY
 * F_SETLK: (libc)File Locks.
 * F_SETLKW: (libc)File Locks.
 * F_SETOWN: (libc)Interrupt Input.
-* HAS_CPU_FEATURE: (libc)X86.
 * HUGE_VAL: (libc)Math Error Reporting.
 * HUGE_VALF: (libc)Math Error Reporting.
 * HUGE_VALL: (libc)Math Error Reporting.
@@ -454,6 +454,7 @@ START-INFO-DIR-ENTRY
 * X_OK: (libc)Testing File Access.
 * _Complex_I: (libc)Complex Numbers.
 * _Exit: (libc)Termination Internals.
+* _Fork: (libc)Creating a Process.
 * _IOFBF: (libc)Controlling Buffering.
 * _IOLBF: (libc)Controlling Buffering.
 * _IONBF: (libc)Controlling Buffering.
@@ -715,7 +716,9 @@ START-INFO-DIR-ENTRY
 * clogfNx: (libc)Exponents and Logarithms.
 * clogl: (libc)Exponents and Logarithms.
 * close: (libc)Opening and Closing Files.
+* close_range: (libc)Opening and Closing Files.
 * closedir: (libc)Reading/Closing Directory.
+* closefrom: (libc)Opening and Closing Files.
 * closelog: (libc)closelog.
 * cnd_broadcast: (libc)ISO C Condition Variables.
 * cnd_destroy: (libc)ISO C Condition Variables.
@@ -2381,7 +2384,7 @@ which describe the location and size of each buffer.
 
      This function is similar to the ‘readv’ function, with the
      difference it adds an extra OFFSET parameter of type ‘off_t’
-     similar to ‘pread’.  The data is written to the file starting at
+     similar to ‘pread’.  The data is read from the file starting at
      position OFFSET.  The position of the file descriptor itself is not
      affected by the operation.  The value is the same as before the
      call.
@@ -6251,8 +6254,8 @@ the result.
 
      The return value of the function is the number of entries placed in
      *NAMELIST.  If it is ‘-1’ an error occurred (either the directory
-     could not be opened for reading or the malloc call failed) and the
-     global variable ‘errno’ contains more information on the error.
+     could not be opened for reading or memory allocation failed) and
+     the global variable ‘errno’ contains more information on the error.
 
    As described above, the fourth argument to the ‘scandir’ function
 must be a pointer to a sorting function.  For the convenience of the
@@ -6884,13 +6887,14 @@ limit if it exists is published in the ‘sys/param.h’ header file.
           char *
           readlink_malloc (const char *filename)
           {
-            int size = 100;
+            size_t size = 50;
             char *buffer = NULL;
 
             while (1)
               {
-                buffer = (char *) xrealloc (buffer, size);
-                int nchars = readlink (filename, buffer, size);
+                buffer = xreallocarray (buffer, size, 2);
+                size *= 2;
+                ssize_t nchars = readlink (filename, buffer, size);
                 if (nchars < 0)
                   {
                     free (buffer);
@@ -6898,7 +6902,6 @@ limit if it exists is published in the ‘sys/param.h’ header file.
                   }
                 if (nchars < size)
                   return buffer;
-                size *= 2;
               }
           }
 

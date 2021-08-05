@@ -1,6 +1,6 @@
 This is libc.info, produced by makeinfo version 6.7 from libc.texinfo.
 
-This is ‘The GNU C Library Reference Manual’, for version 2.33.
+This is ‘The GNU C Library Reference Manual’, for version 2.34.
 
    Copyright © 1993–2021 Free Software Foundation, Inc.
 
@@ -43,7 +43,8 @@ START-INFO-DIR-ENTRY
 * CLOCK_REALTIME: (libc)Getting the Time.
 * COLL_WEIGHTS_MAX: (libc)Utility Limits.
 * CPU_CLR: (libc)CPU Affinity.
-* CPU_FEATURE_USABLE: (libc)X86.
+* CPU_FEATURE_ACTIVE: (libc)X86.
+* CPU_FEATURE_PRESENT: (libc)X86.
 * CPU_ISSET: (libc)CPU Affinity.
 * CPU_SET: (libc)CPU Affinity.
 * CPU_SETSIZE: (libc)CPU Affinity.
@@ -246,7 +247,6 @@ START-INFO-DIR-ENTRY
 * F_SETLK: (libc)File Locks.
 * F_SETLKW: (libc)File Locks.
 * F_SETOWN: (libc)Interrupt Input.
-* HAS_CPU_FEATURE: (libc)X86.
 * HUGE_VAL: (libc)Math Error Reporting.
 * HUGE_VALF: (libc)Math Error Reporting.
 * HUGE_VALL: (libc)Math Error Reporting.
@@ -454,6 +454,7 @@ START-INFO-DIR-ENTRY
 * X_OK: (libc)Testing File Access.
 * _Complex_I: (libc)Complex Numbers.
 * _Exit: (libc)Termination Internals.
+* _Fork: (libc)Creating a Process.
 * _IOFBF: (libc)Controlling Buffering.
 * _IOLBF: (libc)Controlling Buffering.
 * _IONBF: (libc)Controlling Buffering.
@@ -715,7 +716,9 @@ START-INFO-DIR-ENTRY
 * clogfNx: (libc)Exponents and Logarithms.
 * clogl: (libc)Exponents and Logarithms.
 * close: (libc)Opening and Closing Files.
+* close_range: (libc)Opening and Closing Files.
 * closedir: (libc)Reading/Closing Directory.
+* closefrom: (libc)Opening and Closing Files.
 * closelog: (libc)closelog.
 * cnd_broadcast: (libc)ISO C Condition Variables.
 * cnd_destroy: (libc)ISO C Condition Variables.
@@ -2346,6 +2349,10 @@ if ‘CFLAGS’ is specified it must enable optimization.  For example:
      (set glibc.malloc.tcache_count to zero), this option can be used to
      remove it from the build completely.
 
+‘--disable-scv’
+     Disable using ‘scv’ instruction for syscalls.  All syscalls will
+     use ‘sc’ instead, even if the kernel supports ‘scv’.  PowerPC only.
+
 ‘--build=BUILD-SYSTEM’
 ‘--host=HOST-SYSTEM’
      These options are for cross-compiling.  If you specify both options
@@ -2440,6 +2447,21 @@ is the absolute directory name for the main source directory and
 HOSTNAME is the host name of a system that can run the newly built
 binaries of the GNU C Library.  The source and build directories must be
 visible at the same locations on both the build system and HOSTNAME.
+The ‘cross-test-ssh.sh’ script requires ‘flock’ from ‘util-linux’ to
+work when GLIBC_TEST_ALLOW_TIME_SETTING environment variable is set.
+
+   It is also possible to execute tests, which require setting the date
+on the target machine.  Following use cases are supported:
+   • ‘GLIBC_TEST_ALLOW_TIME_SETTING’ is set in the environment in which
+     eligible tests are executed and have the privilege to run
+     ‘clock_settime’.  In this case, nothing prevents those tests from
+     running in parallel, so the caller shall assure that those tests
+     are serialized or provide a proper wrapper script for them.
+
+   • The ‘cross-test-ssh.sh’ script is used and one passes the
+     ‘--allow-time-setting’ flag.  In this case, both sets
+     ‘GLIBC_TEST_ALLOW_TIME_SETTING’ and serialization of test execution
+     are assured automatically.
 
    In general, when testing the GNU C Library, ‘test-wrapper’ may be set
 to the name and arguments of any program to run newly built binaries.
@@ -2457,6 +2479,10 @@ directly assigned, then ‘test-wrapper-env-only’ must be set; its use has
 the same syntax as ‘test-wrapper-env’, the only difference in its
 semantics being starting with an empty set of environment variables
 rather than the ambient set.
+
+   For AArch64 with SVE, when testing the GNU C Library, ‘test-wrapper’
+may be set to "SRCDIR/sysdeps/unix/sysv/linux/aarch64/vltest.py
+VECTOR-LENGTH" to change Vector Length.
 
 
 File: libc.info,  Node: Running make install,  Next: Tools for Compilation,  Prev: Configuring and compiling,  Up: Installation
@@ -2567,7 +2593,7 @@ build the GNU C Library:
      GCC 6.2 or higher is required.  In general it is recommended to use
      the newest version of the compiler that is known to work for
      building the GNU C Library, as newer compilers usually produce
-     better code.  As of release time, GCC 10.2 is the newest compiler
+     better code.  As of release time, GCC 11.2 is the newest compiler
      verified to work to build the GNU C Library.
 
      For PowerPC 64-bits little-endian (powerpc64le), a GCC version with
@@ -2639,7 +2665,7 @@ build the GNU C Library:
 
      Perl is not required, but if present it is used in some tests and
      the ‘mtrace’ program, to build the GNU C Library manual.  As of
-     release time ‘perl’ version 5.32.0 is the newest verified to work
+     release time ‘perl’ version 5.32.1 is the newest verified to work
      to build the GNU C Library.
 
    • GNU ‘sed’ 3.02 or newer
@@ -2651,7 +2677,7 @@ build the GNU C Library:
    • Python 3.4 or later
 
      Python is required to build the GNU C Library.  As of release time,
-     Python 3.8.6 is the newest verified to work for building and
+     Python 3.9.6 is the newest verified to work for building and
      testing the GNU C Library.
 
    • PExpect 4.0
@@ -2668,7 +2694,7 @@ build the GNU C Library:
      use the pretty printers.  Notice that your system having Python
      available doesn’t imply that GDB supports it, nor that your
      system’s Python and GDB’s have the same version.  As of release
-     time GNU ‘debugger’ 10.1 is the newest verified to work to test the
+     time GNU ‘debugger’ 10.2 is the newest verified to work to test the
      pretty printers.
 
      Unless Python, PExpect and GDB with Python support are present, the
@@ -3555,13 +3581,15 @@ operating system are declared in ‘sys/platform/x86.h’.
      Return a pointer to x86 CPU feature structure used by query macros
      for x86 CPU feature LEAF.
 
- -- Macro: int HAS_CPU_FEATURE (NAME)
+ -- Macro: int CPU_FEATURE_PRESENT (NAME)
      This macro returns a nonzero value (true) if the processor has the
      feature NAME.
 
- -- Macro: int CPU_FEATURE_USABLE (NAME)
+ -- Macro: int CPU_FEATURE_ACTIVE (NAME)
      This macro returns a nonzero value (true) if the processor has the
-     feature NAME and the feature is supported by the operating system.
+     feature NAME and the feature is active.  There may be other
+     preconditions, like sufficient stack space or further setup for
+     AMX, which must be satisfied before the feature can be used.
 
    The supported processor features are:
 
@@ -3574,6 +3602,19 @@ operating system are declared in ‘sys/platform/x86.h’.
    • ‘AES’ – The AES instruction extensions.
 
    • ‘AESKLE’ – AES Key Locker instructions are enabled by OS.
+
+   • ‘AMD_IBPB’ – Indirect branch predictor barrier (IBPB) for AMD cpus.
+
+   • ‘AMD_IBRS’ – Indirect branch restricted speculation (IBPB) for AMD
+     cpus.
+
+   • ‘AMD_SSBD’ – Speculative Store Bypass Disable (SSBD) for AMD cpus.
+
+   • ‘AMD_STIBP’ – Single thread indirect branch predictors (STIBP) for
+     AMD cpus.
+
+   • ‘AMD_VIRT_SSBD’ – Speculative Store Bypass Disable (SSBD) for AMD
+     cpus (older systems).
 
    • ‘AMX_BF16’ – Tile computational operations on bfloat16 numbers.
 
@@ -3783,6 +3824,8 @@ operating system are declared in ‘sys/platform/x86.h’.
 
    • ‘PSN’ – Processor Serial Number.
 
+   • ‘PTWRITE’ – PTWRITE instruction.
+
    • ‘RDPID’ – RDPID instruction.
 
    • ‘RDRAND’ – RDRAND instruction.
@@ -3798,6 +3841,9 @@ operating system are declared in ‘sys/platform/x86.h’.
    • ‘RDTSCP’ – RDTSCP instruction.
 
    • ‘RTM’ – RTM instruction extensions.
+
+   • ‘RTM_ALWAYS_ABORT’ – Transactions always abort, making RTM
+     unusable.
 
    • ‘SDBG’ – IA32_DEBUG_INTERFACE MSR for silicon debug.
 
@@ -3902,19 +3948,19 @@ operating system are declared in ‘sys/platform/x86.h’.
      #include <sys/platform/x86.h>
 
      int
-     support_avx (void)
+     avx_present (void)
      {
-       return HAS_CPU_FEATURE (AVX);
+       return CPU_FEATURE_PRESENT (AVX);
      }
 
-   and if ‘AVX’ is usable with:
+   and if ‘AVX’ is active and may be used with:
 
      #include <sys/platform/x86.h>
 
      int
-     usable_avx (void)
+     avx_active (void)
      {
-       return CPU_FEATURE_USABLE (AVX);
+       return CPU_FEATURE_ACTIVE (AVX);
      }
 
 
@@ -5510,7 +5556,6 @@ Concept Index
                                                               (line   6)
 * allocation debugging:                  Allocation Debugging.
                                                               (line   6)
-* allocation hooks, for malloc:          Hooks for Malloc.    (line   6)
 * allocation of memory with malloc:      Basic Allocation.    (line   6)
 * allocation size of string:             Representation of Strings.
                                                               (line  61)
@@ -7217,6 +7262,8 @@ Concept Index
 * writing to a stream, by characters:    Simple Output.       (line   6)
 * writing to a stream, formatted:        Formatted Output.    (line   6)
 * Wrong medium type:                     Error Codes.         (line 794)
+* xmalloc function:                      Malloc Examples.     (line  10)
+* xrealloc and xreallocarray functions:  Changing Block Size. (line  64)
 * You really blew it this time:          Error Codes.         (line 567)
 * YP:                                    Host Identification. (line  37)
 * YP domain name:                        Host Identification. (line  37)

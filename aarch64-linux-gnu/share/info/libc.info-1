@@ -1,6 +1,6 @@
 This is libc.info, produced by makeinfo version 6.7 from libc.texinfo.
 
-This is ‘The GNU C Library Reference Manual’, for version 2.33.
+This is ‘The GNU C Library Reference Manual’, for version 2.34.
 
    Copyright © 1993–2021 Free Software Foundation, Inc.
 
@@ -43,7 +43,8 @@ START-INFO-DIR-ENTRY
 * CLOCK_REALTIME: (libc)Getting the Time.
 * COLL_WEIGHTS_MAX: (libc)Utility Limits.
 * CPU_CLR: (libc)CPU Affinity.
-* CPU_FEATURE_USABLE: (libc)X86.
+* CPU_FEATURE_ACTIVE: (libc)X86.
+* CPU_FEATURE_PRESENT: (libc)X86.
 * CPU_ISSET: (libc)CPU Affinity.
 * CPU_SET: (libc)CPU Affinity.
 * CPU_SETSIZE: (libc)CPU Affinity.
@@ -246,7 +247,6 @@ START-INFO-DIR-ENTRY
 * F_SETLK: (libc)File Locks.
 * F_SETLKW: (libc)File Locks.
 * F_SETOWN: (libc)Interrupt Input.
-* HAS_CPU_FEATURE: (libc)X86.
 * HUGE_VAL: (libc)Math Error Reporting.
 * HUGE_VALF: (libc)Math Error Reporting.
 * HUGE_VALL: (libc)Math Error Reporting.
@@ -454,6 +454,7 @@ START-INFO-DIR-ENTRY
 * X_OK: (libc)Testing File Access.
 * _Complex_I: (libc)Complex Numbers.
 * _Exit: (libc)Termination Internals.
+* _Fork: (libc)Creating a Process.
 * _IOFBF: (libc)Controlling Buffering.
 * _IOLBF: (libc)Controlling Buffering.
 * _IONBF: (libc)Controlling Buffering.
@@ -715,7 +716,9 @@ START-INFO-DIR-ENTRY
 * clogfNx: (libc)Exponents and Logarithms.
 * clogl: (libc)Exponents and Logarithms.
 * close: (libc)Opening and Closing Files.
+* close_range: (libc)Opening and Closing Files.
 * closedir: (libc)Reading/Closing Directory.
+* closefrom: (libc)Opening and Closing Files.
 * closelog: (libc)closelog.
 * cnd_broadcast: (libc)ISO C Condition Variables.
 * cnd_destroy: (libc)ISO C Condition Variables.
@@ -2106,7 +2109,7 @@ File: libc.info,  Node: Top,  Next: Introduction,  Prev: (dir),  Up: (dir)
 Main Menu
 *********
 
-This is ‘The GNU C Library Reference Manual’, for version 2.33.
+This is ‘The GNU C Library Reference Manual’, for version 2.34.
 
    Copyright © 1993–2021 Free Software Foundation, Inc.
 
@@ -2288,8 +2291,6 @@ Unconstrained Allocation
 * Malloc Tunable Parameters::   Use ‘mallopt’ to adjust allocation
                                  parameters.
 * Heap Consistency Checking::   Automatic checking for errors.
-* Hooks for Malloc::            You can use these hooks for debugging
-				 programs that use ‘malloc’.
 * Statistics of Malloc::        Getting information about how much
 				 memory your program is using.
 * Summary of Malloc::           Summary of ‘malloc’ and related functions.
@@ -3401,7 +3402,6 @@ Non-POSIX Extensions
 Internal Probes
 
 * Memory Allocation Probes::  Probes in the memory allocation subsystem
-* Mathematical Function Probes::  Probes in mathematical functions
 * Non-local Goto Probes::  Probes in setjmp and longjmp
 
 Tunables
@@ -4740,9 +4740,9 @@ on semantics undefined within the standard.
      ‘_FILE_OFFSET_BITS’ allows the 64 bit interface to replace the old
      interface.
 
-     If ‘_FILE_OFFSET_BITS’ is undefined, or if it is defined to the
-     value ‘32’, nothing changes.  The 32 bit interface is used and
-     types like ‘off_t’ have a size of 32 bits on 32 bit systems.
+     If ‘_FILE_OFFSET_BITS’ is defined to the value ‘32’, the 32 bit
+     interface is used and types like ‘off_t’ have a size of 32 bits on
+     32 bit systems.
 
      If the macro is defined to the value ‘64’, the large file interface
      replaces the old interface.  I.e., the functions are not made
@@ -4751,6 +4751,10 @@ on semantics undefined within the standard.
      reference the new functions, e.g., a call to ‘fseeko’ now indeed
      calls ‘fseeko64’.
 
+     If the macro is not defined it currently defaults to ‘32’, but this
+     default is planned to change due to a need to update ‘time_t’ for
+     Y2038 safety, and applications should not rely on the default.
+
      This macro should only be selected if the system provides
      mechanisms for handling large files.  On 64 bit systems this macro
      has no effect since the ‘*64’ functions are identical to the normal
@@ -4758,6 +4762,38 @@ on semantics undefined within the standard.
 
      This macro was introduced as part of the Large File Support
      extension (LFS).
+
+ -- Macro: _TIME_BITS
+     This macro determines the bit size of ‘time_t’, and therefore the
+     bit size of all ‘time_t’-derived types and the prototypes of all
+     related functions.
+
+       1. If ‘_TIME_BITS’ is undefined, the bit size of ‘time_t’ is
+          architecture dependent.  Currently it defaults to 64 bits on
+          most architectures.  Although it defaults to 32 bits on some
+          traditional architectures (i686, ARM), this is planned to
+          change and applications should not rely on this.
+
+       2. If ‘_TIME_BITS’ is defined to be 64, ‘time_t’ is defined to be
+          a 64-bit integer.  On platforms where ‘time_t’ was
+          traditionally 32 bits, calls to proper syscalls depend on the
+          Linux kernel version on which the system is running.  For
+          Linux kernel version above 5.1 syscalls supporting 64-bit time
+          are used.  Otherwise, a fallback code is used with legacy
+          (i.e.  32-bit) syscalls.
+
+       3. If ‘_TIME_BITS’ is defined to be 32, ‘time_t’ is defined to be
+          a 32-bit integer where that is supported.  This is not
+          recommended, as 32-bit ‘time_t’ stops working in the year
+          2038.
+
+       4. For any other use case a compile-time error is emitted.
+
+     ‘_TIME_BITS=64’ can be defined only when ‘_FILE_OFFSET_BITS=64’ is
+     also defined.
+
+     By using this macro certain ports gain support for 64-bit time and
+     as a result become immune to the Y2038 problem.
 
  -- Macro: _ISOC99_SOURCE
 
@@ -4803,6 +4839,12 @@ on semantics undefined within the standard.
      are enabled.  Only some of the features from this TS are supported
      by the GNU C Library.
 
+ -- Macro: __STDC_WANT_IEC_60559_EXT__
+
+     If you define this macro, ISO C2X features defined in Annex F of
+     that standard are enabled.  This affects declarations of the
+     ‘totalorder’ functions and functions related to NaN payloads.
+
  -- Macro: _GNU_SOURCE
 
      If you define this macro, everything is included: ISO C89, ISO C99,
@@ -4836,6 +4878,11 @@ on semantics undefined within the standard.
      various library functions.  If defined to 2, even stricter checks
      are applied.  If defined to 3, the GNU C Library may also use
      checks that may have an additional performance overhead.
+
+ -- Macro: _DYNAMIC_STACK_SIZE_SOURCE
+
+     If this macro is defined, correct (but non compile-time constant)
+     MINSIGSTKSZ, SIGSTKSZ and PTHREAD_STACK_MIN are defined.
 
  -- Macro: _REENTRANT
  -- Macro: _THREAD_SAFE
@@ -6567,8 +6614,7 @@ of the space.  Then you can use the operators ‘*’ and ‘->’ on this
 pointer variable to refer to the contents of the space:
 
      {
-       struct foobar *ptr
-          = (struct foobar *) malloc (sizeof (struct foobar));
+       struct foobar *ptr = malloc (sizeof *ptr);
        ptr->name = x;
        ptr->next = current_foobar;
        current_foobar = ptr;
@@ -6582,7 +6628,7 @@ File: libc.info,  Node: The GNU Allocator,  Next: Unconstrained Allocation,  Pre
 
 The ‘malloc’ implementation in the GNU C Library is derived from
 ptmalloc (pthreads malloc), which in turn is derived from dlmalloc (Doug
-Lea malloc).  This malloc may allocate memory in two different ways
+Lea malloc).  This ‘malloc’ may allocate memory in two different ways
 depending on their size and certain parameters that may be controlled by
 users.  The most common way is to allocate portions of memory (called
 chunks) from a large contiguous area of memory and manage these areas to
@@ -6646,8 +6692,6 @@ never).
 * Malloc Tunable Parameters::   Use ‘mallopt’ to adjust allocation
                                  parameters.
 * Heap Consistency Checking::   Automatic checking for errors.
-* Hooks for Malloc::            You can use these hooks for debugging
-				 programs that use ‘malloc’.
 * Statistics of Malloc::        Getting information about how much
 				 memory your program is using.
 * Summary of Malloc::           Summary of ‘malloc’ and related functions.
@@ -6667,35 +6711,31 @@ function is in ‘stdlib.h’.
      *Note POSIX Safety Concepts::.
 
      This function returns a pointer to a newly allocated block SIZE
-     bytes long, or a null pointer if the block could not be allocated.
+     bytes long, or a null pointer (setting ‘errno’) if the block could
+     not be allocated.
 
    The contents of the block are undefined; you must initialize it
 yourself (or use ‘calloc’ instead; *note Allocating Cleared Space::).
-Normally you would cast the value as a pointer to the kind of object
+Normally you would convert the value to a pointer to the kind of object
 that you want to store in the block.  Here we show an example of doing
 so, and of initializing the space with zeros using the library function
 ‘memset’ (*note Copying Strings and Arrays::):
 
-     struct foo *ptr;
-     ...
-     ptr = (struct foo *) malloc (sizeof (struct foo));
+     struct foo *ptr = malloc (sizeof *ptr);
      if (ptr == 0) abort ();
      memset (ptr, 0, sizeof (struct foo));
 
    You can store the result of ‘malloc’ into any pointer variable
 without a cast, because ISO C automatically converts the type ‘void *’
-to another type of pointer when necessary.  But the cast is necessary in
-contexts other than assignment operators or if you might want your code
-to run in traditional C.
+to another type of pointer when necessary.  However, a cast is necessary
+if the type is needed but not specified by context.
 
    Remember that when allocating space for a string, the argument to
 ‘malloc’ must be one plus the length of the string.  This is because a
 string is terminated with a null character that doesn’t count in the
 “length” of the string but does need space.  For example:
 
-     char *ptr;
-     ...
-     ptr = (char *) malloc (length + 1);
+     char *ptr = malloc (length + 1);
 
 *Note Representation of Strings::, for more information about this.
 
@@ -6727,9 +6767,9 @@ allocated null-terminated string:
      char *
      savestring (const char *ptr, size_t len)
      {
-       char *value = (char *) xmalloc (len + 1);
+       char *value = xmalloc (len + 1);
        value[len] = '\0';
-       return (char *) memcpy (value, ptr, len);
+       return memcpy (value, ptr, len);
      }
 
    The block that ‘malloc’ gives you is guaranteed to be aligned so that
@@ -6747,6 +6787,22 @@ than you asked for it to be, you are liable to destroy the data that
 contents of another block.  If you have already allocated a block and
 discover you want it to be bigger, use ‘realloc’ (*note Changing Block
 Size::).
+
+   *Portability Notes:*
+
+   • In the GNU C Library, a successful ‘malloc (0)’ returns a non-null
+     pointer to a newly allocated size-zero block; other implementations
+     may return ‘NULL’ instead.  POSIX and the ISO C standard allow both
+     behaviors.
+
+   • In the GNU C Library, a failed ‘malloc’ call sets ‘errno’, but ISO
+     C does not require this and non-POSIX implementations need not set
+     ‘errno’ when failing.
+
+   • In the GNU C Library, ‘malloc’ always fails when SIZE exceeds
+     ‘PTRDIFF_MAX’, to avoid problems with programs that subtract
+     pointers or use signed indexes.  Other implementations may succeed
+     in this case, leading to undefined behavior later.
 
 
 File: libc.info,  Node: Freeing after Malloc,  Next: Changing Block Size,  Prev: Malloc Examples,  Up: Unconstrained Allocation
@@ -6835,9 +6891,10 @@ These functions are declared in ‘stdlib.h’.
      old contents.
 
      If you pass a null pointer for PTR, ‘realloc’ behaves just like
-     ‘malloc (NEWSIZE)’.  This can be convenient, but beware that older
-     implementations (before ISO C) may not support this behavior, and
-     will probably crash when ‘realloc’ is passed a null pointer.
+     ‘malloc (NEWSIZE)’.  Otherwise, if NEWSIZE is zero ‘realloc’ frees
+     the block and returns ‘NULL’.  Otherwise, if ‘realloc’ cannot
+     reallocate the requested size it returns ‘NULL’ and sets ‘errno’;
+     the original block is left undisturbed.
 
  -- Function: void * reallocarray (void *PTR, size_t NMEMB, size_t SIZE)
 
@@ -6866,17 +6923,23 @@ relocated.
    In most cases it makes no difference what happens to the original
 block when ‘realloc’ fails, because the application program cannot
 continue when it is out of memory, and the only thing to do is to give a
-fatal error message.  Often it is convenient to write and use a
-subroutine, conventionally called ‘xrealloc’, that takes care of the
-error message as ‘xmalloc’ does for ‘malloc’:
+fatal error message.  Often it is convenient to write and use
+subroutines, conventionally called ‘xrealloc’ and ‘xreallocarray’, that
+take care of the error message as ‘xmalloc’ does for ‘malloc’:
+
+     void *
+     xreallocarray (void *ptr, size_t nmemb, size_t size)
+     {
+       void *value = reallocarray (ptr, nmemb, size);
+       if (value == 0)
+         fatal ("Virtual memory exhausted");
+       return value;
+     }
 
      void *
      xrealloc (void *ptr, size_t size)
      {
-       void *value = realloc (ptr, size);
-       if (value == 0)
-         fatal ("Virtual memory exhausted");
-       return value;
+       return xreallocarray (ptr, 1, size);
      }
 
    You can also use ‘realloc’ or ‘reallocarray’ to make a block smaller.
@@ -6885,9 +6948,24 @@ when only a little is needed.  In several allocation implementations,
 making a block smaller sometimes necessitates copying it, so it can fail
 if no other space is available.
 
-   If the new size you specify is the same as the old size, ‘realloc’
-and ‘reallocarray’ are guaranteed to change nothing and return the same
-address that you gave.
+   *Portability Notes:*
+
+   • Portable programs should not attempt to reallocate blocks to be
+     size zero.  On other implementations if PTR is non-null, ‘realloc
+     (ptr, 0)’ might free the block and return a non-null pointer to a
+     size-zero object, or it might fail and return ‘NULL’ without
+     freeing the block.  The ISO C17 standard allows these variations.
+
+   • In the GNU C Library, reallocation fails if the resulting block
+     would exceed ‘PTRDIFF_MAX’ in size, to avoid problems with programs
+     that subtract pointers or use signed indexes.  Other
+     implementations may succeed, leading to undefined behavior later.
+
+   • In the GNU C Library, if the new size is the same as the old,
+     ‘realloc’ and ‘reallocarray’ are guaranteed to change nothing and
+     return the same address that you gave.  However, POSIX and ISO C
+     allow the functions to relocate the object or fail in this
+     situation.
 
 
 File: libc.info,  Node: Allocating Cleared Space,  Next: Aligned Memory Blocks,  Prev: Changing Block Size,  Up: Unconstrained Allocation
@@ -6912,17 +6990,18 @@ declared in ‘stdlib.h’.
      void *
      calloc (size_t count, size_t eltsize)
      {
-       size_t size = count * eltsize;
-       void *value = malloc (size);
+       void *value = reallocarray (0, count, eltsize);
        if (value != 0)
-         memset (value, 0, size);
+         memset (value, 0, count * eltsize);
        return value;
      }
 
-   But in general, it is not guaranteed that ‘calloc’ calls ‘malloc’
-internally.  Therefore, if an application provides its own
-‘malloc’/‘realloc’/‘free’ outside the C library, it should always define
-‘calloc’, too.
+   But in general, it is not guaranteed that ‘calloc’ calls
+‘reallocarray’ and ‘memset’ internally.  For example, if the ‘calloc’
+implementation knows for other reasons that the new memory block is
+zero, it need not zero out the block again with ‘memset’.  Also, if an
+application provides its own ‘reallocarray’ outside the C library,
+‘calloc’ might not use that redefinition.  *Note Replacing malloc::.
 
 
 File: libc.info,  Node: Aligned Memory Blocks,  Next: Malloc Tunable Parameters,  Prev: Allocating Cleared Space,  Up: Unconstrained Allocation
@@ -7145,117 +7224,4 @@ defined in ‘malloc.h’.
           This parameter can also be set for the process at startup by
           setting the environment variable ‘MALLOC_ARENA_MAX’ to the
           desired value.
-
-
-File: libc.info,  Node: Heap Consistency Checking,  Next: Hooks for Malloc,  Prev: Malloc Tunable Parameters,  Up: Unconstrained Allocation
-
-3.2.3.8 Heap Consistency Checking
-.................................
-
-You can ask ‘malloc’ to check the consistency of dynamic memory by using
-the ‘mcheck’ function.  This function is a GNU extension, declared in
-‘mcheck.h’.
-
- -- Function: int mcheck (void (*ABORTFN) (enum mcheck_status STATUS))
-
-     Preliminary: | MT-Unsafe race:mcheck const:malloc_hooks | AS-Unsafe
-     corrupt | AC-Unsafe corrupt | *Note POSIX Safety Concepts::.
-
-     Calling ‘mcheck’ tells ‘malloc’ to perform occasional consistency
-     checks.  These will catch things such as writing past the end of a
-     block that was allocated with ‘malloc’.
-
-     The ABORTFN argument is the function to call when an inconsistency
-     is found.  If you supply a null pointer, then ‘mcheck’ uses a
-     default function which prints a message and calls ‘abort’ (*note
-     Aborting a Program::).  The function you supply is called with one
-     argument, which says what sort of inconsistency was detected; its
-     type is described below.
-
-     It is too late to begin allocation checking once you have allocated
-     anything with ‘malloc’.  So ‘mcheck’ does nothing in that case.
-     The function returns ‘-1’ if you call it too late, and ‘0’
-     otherwise (when it is successful).
-
-     The easiest way to arrange to call ‘mcheck’ early enough is to use
-     the option ‘-lmcheck’ when you link your program; then you don’t
-     need to modify your program source at all.  Alternatively you might
-     use a debugger to insert a call to ‘mcheck’ whenever the program is
-     started, for example these gdb commands will automatically call
-     ‘mcheck’ whenever the program starts:
-
-          (gdb) break main
-          Breakpoint 1, main (argc=2, argv=0xbffff964) at whatever.c:10
-          (gdb) command 1
-          Type commands for when breakpoint 1 is hit, one per line.
-          End with a line saying just "end".
-          >call mcheck(0)
-          >continue
-          >end
-          (gdb) ...
-
-     This will however only work if no initialization function of any
-     object involved calls any of the ‘malloc’ functions since ‘mcheck’
-     must be called before the first such function.
-
- -- Function: enum mcheck_status mprobe (void *POINTER)
-     Preliminary: | MT-Unsafe race:mcheck const:malloc_hooks | AS-Unsafe
-     corrupt | AC-Unsafe corrupt | *Note POSIX Safety Concepts::.
-
-     The ‘mprobe’ function lets you explicitly check for inconsistencies
-     in a particular allocated block.  You must have already called
-     ‘mcheck’ at the beginning of the program, to do its occasional
-     checks; calling ‘mprobe’ requests an additional consistency check
-     to be done at the time of the call.
-
-     The argument POINTER must be a pointer returned by ‘malloc’ or
-     ‘realloc’.  ‘mprobe’ returns a value that says what inconsistency,
-     if any, was found.  The values are described below.
-
- -- Data Type: enum mcheck_status
-     This enumerated type describes what kind of inconsistency was
-     detected in an allocated block, if any.  Here are the possible
-     values:
-
-     ‘MCHECK_DISABLED’
-          ‘mcheck’ was not called before the first allocation.  No
-          consistency checking can be done.
-     ‘MCHECK_OK’
-          No inconsistency detected.
-     ‘MCHECK_HEAD’
-          The data immediately before the block was modified.  This
-          commonly happens when an array index or pointer is decremented
-          too far.
-     ‘MCHECK_TAIL’
-          The data immediately after the block was modified.  This
-          commonly happens when an array index or pointer is incremented
-          too far.
-     ‘MCHECK_FREE’
-          The block was already freed.
-
-   Another possibility to check for and guard against bugs in the use of
-‘malloc’, ‘realloc’ and ‘free’ is to set the environment variable
-‘MALLOC_CHECK_’.  When ‘MALLOC_CHECK_’ is set to a non-zero value, a
-special (less efficient) implementation is used which is designed to be
-tolerant against simple errors, such as double calls of ‘free’ with the
-same argument, or overruns of a single byte (off-by-one bugs).  Not all
-such errors can be protected against, however, and memory leaks can
-result.
-
-   Any detected heap corruption results in immediate termination of the
-process.
-
-   There is one problem with ‘MALLOC_CHECK_’: in SUID or SGID binaries
-it could possibly be exploited since diverging from the normal programs
-behavior it now writes something to the standard error descriptor.
-Therefore the use of ‘MALLOC_CHECK_’ is disabled by default for SUID and
-SGID binaries.  It can be enabled again by the system administrator by
-adding a file ‘/etc/suid-debug’ (the content is not important it could
-be empty).
-
-   So, what’s the difference between using ‘MALLOC_CHECK_’ and linking
-with ‘-lmcheck’?  ‘MALLOC_CHECK_’ is orthogonal with respect to
-‘-lmcheck’.  ‘-lmcheck’ has been added for backward compatibility.  Both
-‘MALLOC_CHECK_’ and ‘-lmcheck’ should uncover the same bugs - but using
-‘MALLOC_CHECK_’ you don’t need to recompile your application.
 

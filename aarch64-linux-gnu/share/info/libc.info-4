@@ -1,6 +1,6 @@
 This is libc.info, produced by makeinfo version 6.7 from libc.texinfo.
 
-This is ‘The GNU C Library Reference Manual’, for version 2.33.
+This is ‘The GNU C Library Reference Manual’, for version 2.34.
 
    Copyright © 1993–2021 Free Software Foundation, Inc.
 
@@ -43,7 +43,8 @@ START-INFO-DIR-ENTRY
 * CLOCK_REALTIME: (libc)Getting the Time.
 * COLL_WEIGHTS_MAX: (libc)Utility Limits.
 * CPU_CLR: (libc)CPU Affinity.
-* CPU_FEATURE_USABLE: (libc)X86.
+* CPU_FEATURE_ACTIVE: (libc)X86.
+* CPU_FEATURE_PRESENT: (libc)X86.
 * CPU_ISSET: (libc)CPU Affinity.
 * CPU_SET: (libc)CPU Affinity.
 * CPU_SETSIZE: (libc)CPU Affinity.
@@ -246,7 +247,6 @@ START-INFO-DIR-ENTRY
 * F_SETLK: (libc)File Locks.
 * F_SETLKW: (libc)File Locks.
 * F_SETOWN: (libc)Interrupt Input.
-* HAS_CPU_FEATURE: (libc)X86.
 * HUGE_VAL: (libc)Math Error Reporting.
 * HUGE_VALF: (libc)Math Error Reporting.
 * HUGE_VALL: (libc)Math Error Reporting.
@@ -454,6 +454,7 @@ START-INFO-DIR-ENTRY
 * X_OK: (libc)Testing File Access.
 * _Complex_I: (libc)Complex Numbers.
 * _Exit: (libc)Termination Internals.
+* _Fork: (libc)Creating a Process.
 * _IOFBF: (libc)Controlling Buffering.
 * _IOLBF: (libc)Controlling Buffering.
 * _IONBF: (libc)Controlling Buffering.
@@ -715,7 +716,9 @@ START-INFO-DIR-ENTRY
 * clogfNx: (libc)Exponents and Logarithms.
 * clogl: (libc)Exponents and Logarithms.
 * close: (libc)Opening and Closing Files.
+* close_range: (libc)Opening and Closing Files.
 * closedir: (libc)Reading/Closing Directory.
+* closefrom: (libc)Opening and Closing Files.
 * closelog: (libc)closelog.
 * cnd_broadcast: (libc)ISO C Condition Variables.
 * cnd_destroy: (libc)ISO C Condition Variables.
@@ -3904,21 +3907,23 @@ The following functions are declared in the header file ‘search.h’.
    Entries of the hashing table and keys for the search are defined
 using this type:
 
- -- Data type: struct ENTRY
-     Both elements of this structure are pointers to zero-terminated
-     strings.  This is a limiting restriction of the functionality of
-     the ‘hsearch’ functions.  They can only be used for data sets which
-     use the NUL character always and solely to terminate the records.
-     It is not possible to handle general binary data.
-
+ -- Data type: ENTRY
      ‘char *key’
           Pointer to a zero-terminated string of characters describing
           the key for the search or the element in the hashing table.
-     ‘char *data’
-          Pointer to a zero-terminated string of characters describing
-          the data.  If the functions will be called only for searching
-          an existing entry this element might stay undefined since it
-          is not used.
+
+          This is a limiting restriction of the functionality of the
+          ‘hsearch’ functions: They can only be used for data sets which
+          use the NUL character always and solely to terminate keys.  It
+          is not possible to handle general binary data for keys.
+
+     ‘void *data’
+          Generic pointer for use by the application.  The hashing table
+          implementation preserves this pointer in entries, but does not
+          use it in any way otherwise.
+
+ -- Data type: struct entry
+     The underlying type of ‘ENTRY’.
 
  -- Function: ENTRY * hsearch (ENTRY ITEM, ACTION ACTION)
 

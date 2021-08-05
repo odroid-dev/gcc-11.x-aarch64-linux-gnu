@@ -1,6 +1,6 @@
 This is libc.info, produced by makeinfo version 6.7 from libc.texinfo.
 
-This is ‘The GNU C Library Reference Manual’, for version 2.33.
+This is ‘The GNU C Library Reference Manual’, for version 2.34.
 
    Copyright © 1993–2021 Free Software Foundation, Inc.
 
@@ -43,7 +43,8 @@ START-INFO-DIR-ENTRY
 * CLOCK_REALTIME: (libc)Getting the Time.
 * COLL_WEIGHTS_MAX: (libc)Utility Limits.
 * CPU_CLR: (libc)CPU Affinity.
-* CPU_FEATURE_USABLE: (libc)X86.
+* CPU_FEATURE_ACTIVE: (libc)X86.
+* CPU_FEATURE_PRESENT: (libc)X86.
 * CPU_ISSET: (libc)CPU Affinity.
 * CPU_SET: (libc)CPU Affinity.
 * CPU_SETSIZE: (libc)CPU Affinity.
@@ -246,7 +247,6 @@ START-INFO-DIR-ENTRY
 * F_SETLK: (libc)File Locks.
 * F_SETLKW: (libc)File Locks.
 * F_SETOWN: (libc)Interrupt Input.
-* HAS_CPU_FEATURE: (libc)X86.
 * HUGE_VAL: (libc)Math Error Reporting.
 * HUGE_VALF: (libc)Math Error Reporting.
 * HUGE_VALL: (libc)Math Error Reporting.
@@ -454,6 +454,7 @@ START-INFO-DIR-ENTRY
 * X_OK: (libc)Testing File Access.
 * _Complex_I: (libc)Complex Numbers.
 * _Exit: (libc)Termination Internals.
+* _Fork: (libc)Creating a Process.
 * _IOFBF: (libc)Controlling Buffering.
 * _IOLBF: (libc)Controlling Buffering.
 * _IONBF: (libc)Controlling Buffering.
@@ -715,7 +716,9 @@ START-INFO-DIR-ENTRY
 * clogfNx: (libc)Exponents and Logarithms.
 * clogl: (libc)Exponents and Logarithms.
 * close: (libc)Opening and Closing Files.
+* close_range: (libc)Opening and Closing Files.
 * closedir: (libc)Reading/Closing Directory.
+* closefrom: (libc)Opening and Closing Files.
 * closelog: (libc)closelog.
 * cnd_broadcast: (libc)ISO C Condition Variables.
 * cnd_destroy: (libc)ISO C Condition Variables.
@@ -3428,27 +3431,25 @@ way to make sure you have all the right prototypes is to just include
           char *
           make_message (char *name, char *value)
           {
-            /* Guess we need no more than 100 chars of space. */
-            int size = 100;
-            char *buffer = (char *) xmalloc (size);
-            int nchars;
-            if (buffer == NULL)
-              return NULL;
-
+            /* Guess we need no more than 100 bytes of space. */
+            size_t size = 100;
+            char *buffer = xmalloc (size);
            /* Try to print in the allocated space. */
-            nchars = snprintf (buffer, size, "value of %s is %s",
-          		     name, value);
-            if (nchars >= size)
+            int buflen = snprintf (buffer, size, "value of %s is %s",
+          		         name, value);
+            if (! (0 <= buflen && buflen < SIZE_MAX))
+              fatal ("integer overflow");
+            if (buflen >= size)
               {
                 /* Reallocate buffer now that we know
           	 how much space is needed. */
-                size = nchars + 1;
-                buffer = (char *) xrealloc (buffer, size);
+                size = buflen;
+                size++;
+                buffer = xrealloc (buffer, size);
 
-                if (buffer != NULL)
-          	/* Try again. */
-          	snprintf (buffer, size, "value of %s is %s",
-          		  name, value);
+                /* Try again. */
+                snprintf (buffer, size, "value of %s is %s",
+          		name, value);
               }
             /* The last call worked, return the string. */
             return buffer;
@@ -4578,10 +4579,10 @@ for the BASE argument.
    The ‘%X’ conversion is identical to the ‘%x’ conversion.  They both
 permit either uppercase or lowercase letters to be used as digits.
 
-   The default type of the corresponding argument for the ‘%d’ and ‘%i’
-conversions is ‘int *’, and ‘unsigned int *’ for the other integer
-conversions.  You can use the following type modifiers to specify other
-sizes of integer:
+   The default type of the corresponding argument for the ‘%d’, ‘%i’,
+and ‘%n’ conversions is ‘int *’, and ‘unsigned int *’ for the other
+integer conversions.  You can use the following type modifiers to
+specify other sizes of integer:
 
 ‘hh’
      Specifies that the argument is a ‘signed char *’ or ‘unsigned char
@@ -4830,7 +4831,8 @@ not originally written during the same program execution that reads it
 in.
 
    The ‘%n’ conversion produces the number of characters read so far by
-this call.  The corresponding argument should be of type ‘int *’.  This
+this call.  The corresponding argument should be of type ‘int *’, unless
+a type modifier is in effect (*note Numeric Input Conversions::).  This
 conversion works in the same way as the ‘%n’ conversion for ‘printf’;
 see *note Other Output Conversions::, for an example.
 
@@ -6721,6 +6723,64 @@ in the header file ‘fcntl.h’, while ‘close’ is declared in ‘unistd.h�
 trying to close its underlying file descriptor with ‘close’.  This
 flushes any buffered output and updates the stream object to indicate
 that it is closed.
+
+ -- Function: int close_range (unsigned int LOWFD, unsigned int MAXFD,
+          int FLAGS)
+
+     Preliminary: | MT-Safe | AS-Safe | AC-Safe fd | *Note POSIX Safety
+     Concepts::.
+
+     The function ‘close_range’ closes the file descriptor from LOWFD to
+     MAXFD (inclusive).  This function is similar to call ‘close’ in
+     specified file descriptor range depending on the FLAGS.
+
+     This is function is only supported on recent Linux versions and the
+     GNU C Library does not provide any fallback (the application will
+     need to handle possible ‘ENOSYS’).
+
+     The FLAGS add options on how the files are closes.  Linux currently
+     supports:
+
+     ‘CLOSE_RANGE_UNSHARE’
+          Unshare the file descriptor table before closing file
+          descriptors.
+
+     ‘CLOSE_RANGE_CLOEXEC’
+          Set the ‘FD_CLOEXEC’ bit instead of closing the file
+          descriptor.
+
+     The normal return value from ‘close_range’ is 0; a value of -1 is
+     returned in case of failure.  The following ‘errno’ error
+     conditions are defined for this function:
+
+     ‘EINVAL’
+          The LOWFD value is larger than MAXFD or an unsupported FLAGS
+          is used.
+
+     ‘ENOMEM’
+          Either there is not enough memory for the operation, or the
+          process is out of address space.  It can only happnes when
+          ‘CLOSE_RANGE_UNSHARED’ flag is used.
+
+     ‘EMFILE’
+          The process has too many files open and it can only happens
+          when ‘CLOSE_RANGE_UNSHARED’ flag is used.  The maximum number
+          of file descriptors is controlled by the ‘RLIMIT_NOFILE’
+          resource limit; *note Limits on Resources::.
+
+     ‘ENOSYS’
+          The kernel does not implement the required functionality.
+
+ -- Function: void closefrom (int LOWFD)
+
+     Preliminary: | MT-Safe | AS-Safe | AC-Safe fd | *Note POSIX Safety
+     Concepts::.
+
+     The function ‘closefrom’ closes all file descriptors larger than or
+     equal to LOWFD then LOWFD.  This function is similar to calling
+     ‘close’ for all open file descriptors not less than LOWFD.
+
+     Already closed file descriptors are ignored.
 
 
 File: libc.info,  Node: I/O Primitives,  Next: File Position Primitive,  Prev: Opening and Closing Files,  Up: Low-Level I/O

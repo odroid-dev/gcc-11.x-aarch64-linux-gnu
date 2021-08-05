@@ -1,6 +1,6 @@
 This is libc.info, produced by makeinfo version 6.7 from libc.texinfo.
 
-This is ‘The GNU C Library Reference Manual’, for version 2.33.
+This is ‘The GNU C Library Reference Manual’, for version 2.34.
 
    Copyright © 1993–2021 Free Software Foundation, Inc.
 
@@ -43,7 +43,8 @@ START-INFO-DIR-ENTRY
 * CLOCK_REALTIME: (libc)Getting the Time.
 * COLL_WEIGHTS_MAX: (libc)Utility Limits.
 * CPU_CLR: (libc)CPU Affinity.
-* CPU_FEATURE_USABLE: (libc)X86.
+* CPU_FEATURE_ACTIVE: (libc)X86.
+* CPU_FEATURE_PRESENT: (libc)X86.
 * CPU_ISSET: (libc)CPU Affinity.
 * CPU_SET: (libc)CPU Affinity.
 * CPU_SETSIZE: (libc)CPU Affinity.
@@ -246,7 +247,6 @@ START-INFO-DIR-ENTRY
 * F_SETLK: (libc)File Locks.
 * F_SETLKW: (libc)File Locks.
 * F_SETOWN: (libc)Interrupt Input.
-* HAS_CPU_FEATURE: (libc)X86.
 * HUGE_VAL: (libc)Math Error Reporting.
 * HUGE_VALF: (libc)Math Error Reporting.
 * HUGE_VALL: (libc)Math Error Reporting.
@@ -454,6 +454,7 @@ START-INFO-DIR-ENTRY
 * X_OK: (libc)Testing File Access.
 * _Complex_I: (libc)Complex Numbers.
 * _Exit: (libc)Termination Internals.
+* _Fork: (libc)Creating a Process.
 * _IOFBF: (libc)Controlling Buffering.
 * _IOLBF: (libc)Controlling Buffering.
 * _IONBF: (libc)Controlling Buffering.
@@ -715,7 +716,9 @@ START-INFO-DIR-ENTRY
 * clogfNx: (libc)Exponents and Logarithms.
 * clogl: (libc)Exponents and Logarithms.
 * close: (libc)Opening and Closing Files.
+* close_range: (libc)Opening and Closing Files.
 * closedir: (libc)Reading/Closing Directory.
+* closefrom: (libc)Opening and Closing Files.
 * closelog: (libc)closelog.
 * cnd_broadcast: (libc)ISO C Condition Variables.
 * cnd_destroy: (libc)ISO C Condition Variables.
@@ -2135,8 +2138,10 @@ Type Index
 * dev_t:                                 Attribute Meanings.  (line 214)
 * DIR:                                   Opening a Directory. (line   9)
 * div_t:                                 Integer Division.    (line  19)
+* ENTRY:                                 Hash Search Function.
+                                                              (line  69)
 * enum mcheck_status:                    Heap Consistency Checking.
-                                                              (line  66)
+                                                              (line  67)
 * fd_set:                                Waiting for I/O.     (line  34)
 * FILE:                                  Streams.             (line  16)
 * fpos64_t:                              Portable Positioning.
@@ -2179,29 +2184,29 @@ Type Index
 * glibc.malloc:                          Memory Allocation Tunables.
                                                               (line   6)
 * glibc.malloc.arena_max:                Memory Allocation Tunables.
-                                                              (line 105)
+                                                              (line 108)
 * glibc.malloc.arena_test:               Memory Allocation Tunables.
-                                                              (line  93)
+                                                              (line  96)
 * glibc.malloc.check:                    Memory Allocation Tunables.
                                                               (line  10)
 * glibc.malloc.mmap_max:                 Memory Allocation Tunables.
-                                                              (line  84)
+                                                              (line  87)
 * glibc.malloc.mmap_threshold:           Memory Allocation Tunables.
-                                                              (line  56)
+                                                              (line  59)
 * glibc.malloc.mxfast:                   Memory Allocation Tunables.
-                                                              (line 148)
+                                                              (line 151)
 * glibc.malloc.perturb:                  Memory Allocation Tunables.
-                                                              (line  42)
+                                                              (line  45)
 * glibc.malloc.tcache_count:             Memory Allocation Tunables.
-                                                              (line 123)
+                                                              (line 126)
 * glibc.malloc.tcache_max:               Memory Allocation Tunables.
-                                                              (line 118)
+                                                              (line 121)
 * glibc.malloc.tcache_unsorted_limit:    Memory Allocation Tunables.
-                                                              (line 134)
+                                                              (line 137)
 * glibc.malloc.top_pad:                  Memory Allocation Tunables.
-                                                              (line  30)
+                                                              (line  33)
 * glibc.malloc.trim_threshold:           Memory Allocation Tunables.
-                                                              (line  71)
+                                                              (line  74)
 * glibc.mem:                             Memory Related Tunables.
                                                               (line   6)
 * glibc.mem.tagging:                     Memory Related Tunables.
@@ -2210,6 +2215,8 @@ Type Index
                                                               (line   6)
 * glibc.pthread.mutex_spin_count:        POSIX Thread Tunables.
                                                               (line  12)
+* glibc.pthread.stack_cache_size:        POSIX Thread Tunables.
+                                                              (line  24)
 * glibc.rtld:                            Dynamic Linking Tunables.
                                                               (line   6)
 * glibc.rtld.nns:                        Dynamic Linking Tunables.
@@ -2321,24 +2328,6 @@ Type Index
 * sig_atomic_t:                          Atomic Types.        (line  15)
 * size_t:                                Important Data Types.
                                                               (line  23)
-* slowatan:                              Mathematical Function Probes.
-                                                              (line  36)
-* slowatan2:                             Mathematical Function Probes.
-                                                              (line  19)
-* slowatan2_inexact:                     Mathematical Function Probes.
-                                                              (line  27)
-* slowatan_inexact:                      Mathematical Function Probes.
-                                                              (line  43)
-* slowcos:                               Mathematical Function Probes.
-                                                              (line  63)
-* slowcos_dx:                            Mathematical Function Probes.
-                                                              (line  75)
-* slowsin:                               Mathematical Function Probes.
-                                                              (line  57)
-* slowsin_dx:                            Mathematical Function Probes.
-                                                              (line  69)
-* slowtan:                               Mathematical Function Probes.
-                                                              (line  51)
 * speed_t:                               Line Speed.          (line  76)
 * ssize_t:                               I/O Primitives.      (line  10)
 * stack_t:                               Signal Stack.        (line  26)
@@ -2352,8 +2341,8 @@ Type Index
 * struct argp_state:                     Argp Parsing State.  (line  10)
 * struct crypt_data:                     Passphrase Storage.  (line 123)
 * struct dirent:                         Directory Entries.   (line  10)
-* struct ENTRY:                          Hash Search Function.
-                                                              (line  69)
+* struct entry:                          Hash Search Function.
+                                                              (line  84)
 * struct exit_status:                    Manipulating the Database.
                                                               (line   9)
 * struct flock:                          File Locks.          (line  41)
@@ -2469,6 +2458,7 @@ Function and Macro Index
 * _Exit:                                 Termination Internals.
                                                               (line  18)
 * _flushlbf:                             Flushing Buffers.    (line  54)
+* _Fork:                                 Creating a Process.  (line  62)
 * _tolower:                              Case Conversion.     (line  50)
 * _toupper:                              Case Conversion.     (line  58)
 * __fbufsize:                            Controlling Buffering.
@@ -2860,7 +2850,11 @@ Function and Macro Index
                                                               (line 150)
 * closedir:                              Reading/Closing Directory.
                                                               (line 143)
+* closefrom:                             Opening and Closing Files.
+                                                              (line 252)
 * closelog:                              closelog.            (line   9)
+* close_range:                           Opening and Closing Files.
+                                                              (line 205)
 * cnd_broadcast:                         ISO C Condition Variables.
                                                               (line  43)
 * cnd_destroy:                           ISO C Condition Variables.
@@ -2929,7 +2923,8 @@ Function and Macro Index
 * cprojl:                                Operations on Complex.
                                                               (line  65)
 * CPU_CLR:                               CPU Affinity.        (line  87)
-* CPU_FEATURE_USABLE:                    X86.                 (line  21)
+* CPU_FEATURE_ACTIVE:                    X86.                 (line  21)
+* CPU_FEATURE_PRESENT:                   X86.                 (line  17)
 * CPU_ISSET:                             CPU Affinity.        (line  99)
 * CPU_SET:                               CPU Affinity.        (line  75)
 * CPU_ZERO:                              CPU Affinity.        (line  66)
@@ -3491,19 +3486,18 @@ Function and Macro Index
 * gsignal:                               Signaling Yourself.  (line  19)
 * gtty:                                  BSD Terminal Modes.  (line  31)
 * hasmntopt:                             mtab.                (line 205)
-* HAS_CPU_FEATURE:                       X86.                 (line  17)
 * hcreate:                               Hash Search Function.
                                                               (line  12)
 * hcreate_r:                             Hash Search Function.
-                                                              (line 116)
+                                                              (line 118)
 * hdestroy:                              Hash Search Function.
                                                               (line  42)
 * hdestroy_r:                            Hash Search Function.
-                                                              (line 135)
+                                                              (line 137)
 * hsearch:                               Hash Search Function.
-                                                              (line  85)
+                                                              (line  87)
 * hsearch_r:                             Hash Search Function.
-                                                              (line 145)
+                                                              (line 147)
 * htonl:                                 Byte Order.          (line  50)
 * htons:                                 Byte Order.          (line  34)
 * hypot:                                 Exponents and Logarithms.
@@ -3835,7 +3829,7 @@ Function and Macro Index
 * mbtowc:                                Non-reentrant Character Conversion.
                                                               (line   6)
 * mcheck:                                Heap Consistency Checking.
-                                                              (line  10)
+                                                              (line  11)
 * memalign:                              Aligned Memory Blocks.
                                                               (line  35)
 * memccpy:                               Copying Strings and Arrays.
@@ -3879,7 +3873,7 @@ Function and Macro Index
 * mount:                                 Mount-Unmount-Remount.
                                                               (line  16)
 * mprobe:                                Heap Consistency Checking.
-                                                              (line  52)
+                                                              (line  53)
 * mprotect:                              Memory Protection.   (line  52)
 * mrand48:                               SVID Random.         (line  87)
 * mrand48_r:                             SVID Random.         (line 263)
@@ -3895,7 +3889,7 @@ Function and Macro Index
 * munlock:                               Page Lock Functions. (line  92)
 * munlockall:                            Page Lock Functions. (line 168)
 * munmap:                                Memory-mapped I/O.   (line 175)
-* muntrace:                              Tracing malloc.      (line  31)
+* muntrace:                              Tracing malloc.      (line  36)
 * nan:                                   FP Bit Twiddling.    (line 113)
 * nanf:                                  FP Bit Twiddling.    (line 114)
 * nanfN:                                 FP Bit Twiddling.    (line 116)
@@ -4651,7 +4645,7 @@ Function and Macro Index
                                                               (line  57)
 * versionsort64:                         Scanning Directory Content.
                                                               (line 109)
-* vfork:                                 Creating a Process.  (line  62)
+* vfork:                                 Creating a Process.  (line  76)
 * vfprintf:                              Variable Arguments Output.
                                                               (line  72)
 * vfscanf:                               Variable Arguments Input.

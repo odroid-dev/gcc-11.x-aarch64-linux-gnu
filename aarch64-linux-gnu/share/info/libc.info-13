@@ -1,6 +1,6 @@
 This is libc.info, produced by makeinfo version 6.7 from libc.texinfo.
 
-This is ‘The GNU C Library Reference Manual’, for version 2.33.
+This is ‘The GNU C Library Reference Manual’, for version 2.34.
 
    Copyright © 1993–2021 Free Software Foundation, Inc.
 
@@ -43,7 +43,8 @@ START-INFO-DIR-ENTRY
 * CLOCK_REALTIME: (libc)Getting the Time.
 * COLL_WEIGHTS_MAX: (libc)Utility Limits.
 * CPU_CLR: (libc)CPU Affinity.
-* CPU_FEATURE_USABLE: (libc)X86.
+* CPU_FEATURE_ACTIVE: (libc)X86.
+* CPU_FEATURE_PRESENT: (libc)X86.
 * CPU_ISSET: (libc)CPU Affinity.
 * CPU_SET: (libc)CPU Affinity.
 * CPU_SETSIZE: (libc)CPU Affinity.
@@ -246,7 +247,6 @@ START-INFO-DIR-ENTRY
 * F_SETLK: (libc)File Locks.
 * F_SETLKW: (libc)File Locks.
 * F_SETOWN: (libc)Interrupt Input.
-* HAS_CPU_FEATURE: (libc)X86.
 * HUGE_VAL: (libc)Math Error Reporting.
 * HUGE_VALF: (libc)Math Error Reporting.
 * HUGE_VALL: (libc)Math Error Reporting.
@@ -454,6 +454,7 @@ START-INFO-DIR-ENTRY
 * X_OK: (libc)Testing File Access.
 * _Complex_I: (libc)Complex Numbers.
 * _Exit: (libc)Termination Internals.
+* _Fork: (libc)Creating a Process.
 * _IOFBF: (libc)Controlling Buffering.
 * _IOLBF: (libc)Controlling Buffering.
 * _IONBF: (libc)Controlling Buffering.
@@ -715,7 +716,9 @@ START-INFO-DIR-ENTRY
 * clogfNx: (libc)Exponents and Logarithms.
 * clogl: (libc)Exponents and Logarithms.
 * close: (libc)Opening and Closing Files.
+* close_range: (libc)Opening and Closing Files.
 * closedir: (libc)Reading/Closing Directory.
+* closefrom: (libc)Opening and Closing Files.
 * closelog: (libc)closelog.
 * cnd_broadcast: (libc)ISO C Condition Variables.
 * cnd_destroy: (libc)ISO C Condition Variables.
@@ -3029,6 +3032,27 @@ enumeration type values).
 
      Inquire about the parameter corresponding to ‘NL_TEXTMAX’.
 
+‘_SC_MINSIGSTKSZ’
+
+     Inquire about the minimum number of bytes of free stack space
+     required in order to guarantee successful, non-nested handling of a
+     single signal whose handler is an empty function.
+
+‘_SC_SIGSTKSZ’
+
+     Inquire about the suggested minimum number of bytes of stack space
+     required for a signal stack.
+
+     This is not guaranteed to be enough for any specific purpose other
+     than the invocation of a single, non-nested, empty handler, but
+     nonetheless should be enough for basic scenarios involving simple
+     signal handlers and very low levels of signal nesting (say, 2 or 3
+     levels at the very most).
+
+     This value is provided for developer convenience and to ease
+     migration from the legacy ‘SIGSTKSZ’ constant.  Programs requiring
+     stronger guarantees should avoid using it if at all possible.
+
 
 File: libc.info,  Node: Examples of Sysconf,  Prev: Constants for Sysconf,  Up: Sysconf
 
@@ -5211,11 +5235,10 @@ arguments.
 * Menu:
 
 * Memory Allocation Probes::  Probes in the memory allocation subsystem
-* Mathematical Function Probes::  Probes in mathematical functions
 * Non-local Goto Probes::  Probes in setjmp and longjmp
 
 
-File: libc.info,  Node: Memory Allocation Probes,  Next: Mathematical Function Probes,  Up: Internal Probes
+File: libc.info,  Node: Memory Allocation Probes,  Next: Non-local Goto Probes,  Up: Internal Probes
 
 36.1 Memory Allocation Probes
 =============================
@@ -5428,90 +5451,9 @@ the virtual memory subsystem of the GNU C Library.
      $ARG2 is the tcache bin it resides in.
 
 
-File: libc.info,  Node: Mathematical Function Probes,  Next: Non-local Goto Probes,  Prev: Memory Allocation Probes,  Up: Internal Probes
+File: libc.info,  Node: Non-local Goto Probes,  Prev: Memory Allocation Probes,  Up: Internal Probes
 
-36.2 Mathematical Function Probes
-=================================
-
-Some mathematical functions fall back to multiple precision arithmetic
-for some inputs to get last bit precision for their return values.  This
-multiple precision fallback is much slower than the default algorithms
-and may have a significant impact on application performance.  The
-systemtap probe markers described in this section may help you determine
-if your application calls mathematical functions with inputs that may
-result in multiple-precision arithmetic.
-
-   Unless explicitly mentioned otherwise, a precision of 1 implies 24
-bits of precision in the mantissa of the multiple precision number.
-Hence, a precision level of 32 implies 768 bits of precision in the
-mantissa.
-
- -- Probe: slowatan2 (int $ARG1, double $ARG2, double $ARG3, double
-          $ARG4)
-     This probe is triggered when the ‘atan2’ function is called with an
-     input that results in multiple precision computation.  Argument
-     $ARG1 is the precision with which computation succeeded.  Arguments
-     $ARG2 and $ARG3 are inputs to the ‘atan2’ function and $ARG4 is the
-     computed result.
-
- -- Probe: slowatan2_inexact (int $ARG1, double $ARG2, double $ARG3,
-          double $ARG4)
-     This probe is triggered when the ‘atan’ function is called with an
-     input that results in multiple precision computation and none of
-     the multiple precision computations result in an accurate result.
-     Argument $ARG1 is the maximum precision with which computations
-     were performed.  Arguments $ARG2 and $ARG3 are inputs to the
-     ‘atan2’ function and $ARG4 is the computed result.
-
- -- Probe: slowatan (int $ARG1, double $ARG2, double $ARG3)
-     This probe is triggered when the ‘atan’ function is called with an
-     input that results in multiple precision computation.  Argument
-     $ARG1 is the precision with which computation succeeded.  Argument
-     $ARG2 is the input to the ‘atan’ function and $ARG3 is the computed
-     result.
-
- -- Probe: slowatan_inexact (int $ARG1, double $ARG2, double $ARG3)
-     This probe is triggered when the ‘atan’ function is called with an
-     input that results in multiple precision computation and none of
-     the multiple precision computations result in an accurate result.
-     Argument $ARG1 is the maximum precision with which computations
-     were performed.  Argument $ARG2 is the input to the ‘atan’ function
-     and $ARG3 is the computed result.
-
- -- Probe: slowtan (double $ARG1, double $ARG2)
-     This probe is triggered when the ‘tan’ function is called with an
-     input that results in multiple precision computation with precision
-     32.  Argument $ARG1 is the input to the function and $ARG2 is the
-     computed result.
-
- -- Probe: slowsin (double $ARG1, double $ARG2)
-     This probe is triggered when the ‘sin’ function is called with an
-     input that results in multiple precision computation with precision
-     32.  Argument $ARG1 is the input to the function and $ARG2 is the
-     computed result.
-
- -- Probe: slowcos (double $ARG1, double $ARG2)
-     This probe is triggered when the ‘cos’ function is called with an
-     input that results in multiple precision computation with precision
-     32.  Argument $ARG1 is the input to the function and $ARG2 is the
-     computed result.
-
- -- Probe: slowsin_dx (double $ARG1, double $ARG2, double $ARG3)
-     This probe is triggered when the ‘sin’ function is called with an
-     input that results in multiple precision computation with precision
-     32.  Argument $ARG1 is the input to the function, $ARG2 is the
-     error bound of $ARG1 and $ARG3 is the computed result.
-
- -- Probe: slowcos_dx (double $ARG1, double $ARG2, double $ARG3)
-     This probe is triggered when the ‘cos’ function is called with an
-     input that results in multiple precision computation with precision
-     32.  Argument $ARG1 is the input to the function, $ARG2 is the
-     error bound of $ARG1 and $ARG3 is the computed result.
-
-
-File: libc.info,  Node: Non-local Goto Probes,  Prev: Mathematical Function Probes,  Up: Internal Probes
-
-36.3 Non-local Goto Probes
+36.2 Non-local Goto Probes
 ==========================
 
 These probes are used to signal calls to ‘setjmp’, ‘sigsetjmp’,
@@ -5558,8 +5500,8 @@ behavior to match their workload.  These are implemented as a set of
 switches that may be modified in different ways.  The current default
 method to do this is via the ‘GLIBC_TUNABLES’ environment variable by
 setting it to a string of colon-separated NAME=VALUE pairs.  For
-example, the following example enables malloc checking and sets the
-malloc trim threshold to 128 bytes:
+example, the following example enables ‘malloc’ checking and sets the
+‘malloc’ trim threshold to 128 bytes:
 
      GLIBC_TUNABLES=glibc.malloc.trim_threshold=128:glibc.malloc.check=3
      export GLIBC_TUNABLES
@@ -5657,15 +5599,18 @@ File: libc.info,  Node: Memory Allocation Tunables,  Next: Dynamic Linking Tunab
 
  -- Tunable: glibc.malloc.check
      This tunable supersedes the ‘MALLOC_CHECK_’ environment variable
-     and is identical in features.
+     and is identical in features.  This tunable has no effect by
+     default and needs the debug library ‘libc_malloc_debug’ to be
+     preloaded using the ‘LD_PRELOAD’ environment variable.
 
-     Setting this tunable to a non-zero value enables a special (less
-     efficient) memory allocator for the malloc family of functions that
-     is designed to be tolerant against simple errors such as double
-     calls of free with the same argument, or overruns of a single byte
-     (off-by-one bugs).  Not all such errors can be protected against,
-     however, and memory leaks can result.  Any detected heap corruption
-     results in immediate termination of the process.
+     Setting this tunable to a non-zero value less than 4 enables a
+     special (less efficient) memory allocator for the ‘malloc’ family
+     of functions that is designed to be tolerant against simple errors
+     such as double calls of free with the same argument, or overruns of
+     a single byte (off-by-one bugs).  Not all such errors can be
+     protected against, however, and memory leaks can result.  Any
+     detected heap corruption results in immediate termination of the
+     process.
 
      Like ‘MALLOC_CHECK_’, ‘glibc.malloc.check’ has a problem in that it
      diverges from normal program behavior by writing to ‘stderr’, which
@@ -5693,7 +5638,7 @@ File: libc.info,  Node: Memory Allocation Tunables,  Next: Dynamic Linking Tunab
 
      If set to a non-zero value, memory blocks are initialized with
      values depending on some low order bits of this tunable when they
-     are allocated (except when allocated by calloc) and freed.  This
+     are allocated (except when allocated by ‘calloc’) and freed.  This
      can be used to debug the use of uninitialized or freed heap memory.
      Note that this option does not guarantee that the freed block will
      have any specific values.  It only guarantees that the content the
@@ -5794,13 +5739,13 @@ File: libc.info,  Node: Memory Allocation Tunables,  Next: Dynamic Linking Tunab
      set to zero, is no limit.
 
  -- Tunable: glibc.malloc.mxfast
-     One of the optimizations malloc uses is to maintain a series of
+     One of the optimizations ‘malloc’ uses is to maintain a series of
      “fast bins” that hold chunks up to a specific size.  The default
      and maximum size which may be held this way is 80 bytes on 32-bit
      systems or 160 bytes on 64-bit systems.  Applications which value
      size over speed may choose to reduce the size of requests which are
      serviced from fast bins with this tunable.  Note that the value
-     specified includes malloc’s internal overhead, which is normally
+     specified includes ‘malloc’’s internal overhead, which is normally
      the size of one pointer, so add 4 on 32-bit systems or 8 on 64-bit
      systems to the size passed to ‘malloc’ for the largest bin size to
      enable.
@@ -5935,6 +5880,14 @@ File: libc.info,  Node: POSIX Thread Tunables,  Next: Hardware Capability Tunabl
 
      The default value of this tunable is ‘100’.
 
+ -- Tunable: glibc.pthread.stack_cache_size
+     This tunable configures the maximum size of the stack cache.  Once
+     the stack cache exceeds this size, unused thread stacks are
+     returned to the kernel, to bring the cache size below this limit.
+
+     The value is measured in bytes.  The default is ‘41943040’ (fourty
+     mibibytes).
+
 
 File: libc.info,  Node: Hardware Capability Tunables,  Next: Memory Related Tunables,  Prev: POSIX Thread Tunables,  Up: Tunables
 
@@ -5977,7 +5930,7 @@ File: libc.info,  Node: Hardware Capability Tunables,  Next: Memory Related Tuna
      The ‘glibc.cpu.name=xxx’ tunable allows the user to tell the GNU C
      Library to assume that the CPU is ‘xxx’ where xxx may have one of
      these values: ‘generic’, ‘falkor’, ‘thunderxt88’, ‘thunderx2t99’,
-     ‘thunderx2t99p1’, ‘ares’, ‘emag’, ‘kunpeng’.
+     ‘thunderx2t99p1’, ‘ares’, ‘emag’, ‘kunpeng’, ‘a64fx’.
 
      This tunable is specific to aarch64.
 
@@ -6061,7 +6014,7 @@ File: libc.info,  Node: Memory Related Tunables,  Prev: Hardware Capability Tuna
      This tunable takes a value between 0 and 255 and acts as a bitmask
      that enables various capabilities.
 
-     Bit 0 (the least significant bit) causes the malloc subsystem to
+     Bit 0 (the least significant bit) causes the ‘malloc’ subsystem to
      allocate tagged memory, with each allocation being assigned a
      random tag.
 
@@ -10326,6 +10279,10 @@ it.
 
      _no header_ (GNU): *note Feature Test Macros::.
 
+‘_DYNAMIC_STACK_SIZE_SOURCE’
+
+     _no header_ (GNU): *note Feature Test Macros::.
+
 ‘void _Exit (int STATUS)’
 
      ‘stdlib.h’ (ISO): *note Termination Internals::.
@@ -10337,6 +10294,10 @@ it.
 ‘_FORTIFY_SOURCE’
 
      _no header_ (GNU): *note Feature Test Macros::.
+
+‘pid_t _Fork (void)’
+
+     ‘unistd.h’ (GNU): *note Creating a Process::.
 
 ‘_GNU_SOURCE’
 
@@ -10826,6 +10787,10 @@ it.
 
      ‘unistd.h’ (POSIX.1): *note Constants for Sysconf::.
 
+‘_SC_MINSIGSTKSZ’
+
+     ‘unistd.h’ (GNU): *note Constants for Sysconf::.
+
 ‘_SC_MQ_OPEN_MAX’
 
      ‘unistd.h’ (POSIX.1): *note Constants for Sysconf::.
@@ -10985,6 +10950,10 @@ it.
 ‘_SC_SIGQUEUE_MAX’
 
      ‘unistd.h’ (POSIX.1): *note Constants for Sysconf::.
+
+‘_SC_SIGSTKSZ’
+
+     ‘unistd.h’ (GNU): *note Constants for Sysconf::.
 
 ‘_SC_SSIZE_MAX’
 
@@ -11160,6 +11129,10 @@ it.
 
      _no header_ (ISO): *note Feature Test Macros::.
 
+‘__STDC_WANT_IEC_60559_EXT__’
+
+     _no header_ (ISO): *note Feature Test Macros::.
+
 ‘__STDC_WANT_IEC_60559_FUNCS_EXT__’
 
      _no header_ (ISO): *note Feature Test Macros::.
@@ -11195,10 +11168,6 @@ it.
 ‘int __freading (FILE *STREAM)’
 
      ‘stdio_ext.h’ (GNU): *note Opening Streams::.
-
-‘__free_hook’
-
-     ‘malloc.h’ (GNU): *note Hooks for Malloc::.
 
 ‘int __fsetlocking (FILE *STREAM, int TYPE)’
 
@@ -11244,14 +11213,6 @@ it.
 
      ‘sys/single_threaded.h’ (GNU): *note Single-Threaded::.
 
-‘__malloc_hook’
-
-     ‘malloc.h’ (GNU): *note Hooks for Malloc::.
-
-‘__memalign_hook’
-
-     ‘malloc.h’ (GNU): *note Hooks for Malloc::.
-
 ‘__nftw64_func_t’
 
      ‘ftw.h’ (GNU): *note Working with Directory Trees::.
@@ -11259,10 +11220,6 @@ it.
 ‘__nftw_func_t’
 
      ‘ftw.h’ (GNU): *note Working with Directory Trees::.
-
-‘__realloc_hook’
-
-     ‘malloc.h’ (GNU): *note Hooks for Malloc::.
 
 ‘void __va_copy (va_list DEST, va_list SRC)’
 
@@ -12198,9 +12155,17 @@ it.
 
      ‘unistd.h’ (POSIX.1): *note Opening and Closing Files::.
 
+‘int close_range (unsigned int LOWFD, unsigned int MAXFD, int FLAGS)’
+
+     ‘unistd.h’ (Linux): *note Opening and Closing Files::.
+
 ‘int closedir (DIR *DIRSTREAM)’
 
      ‘dirent.h’ (POSIX.1): *note Reading/Closing Directory::.
+
+‘void closefrom (int LOWFD)’
+
+     ‘unistd.h’ (GNU): *note Opening and Closing Files::.
 
 ‘void closelog (void)’
 

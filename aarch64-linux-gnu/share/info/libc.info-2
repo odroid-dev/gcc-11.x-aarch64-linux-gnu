@@ -1,6 +1,6 @@
 This is libc.info, produced by makeinfo version 6.7 from libc.texinfo.
 
-This is ‘The GNU C Library Reference Manual’, for version 2.33.
+This is ‘The GNU C Library Reference Manual’, for version 2.34.
 
    Copyright © 1993–2021 Free Software Foundation, Inc.
 
@@ -43,7 +43,8 @@ START-INFO-DIR-ENTRY
 * CLOCK_REALTIME: (libc)Getting the Time.
 * COLL_WEIGHTS_MAX: (libc)Utility Limits.
 * CPU_CLR: (libc)CPU Affinity.
-* CPU_FEATURE_USABLE: (libc)X86.
+* CPU_FEATURE_ACTIVE: (libc)X86.
+* CPU_FEATURE_PRESENT: (libc)X86.
 * CPU_ISSET: (libc)CPU Affinity.
 * CPU_SET: (libc)CPU Affinity.
 * CPU_SETSIZE: (libc)CPU Affinity.
@@ -246,7 +247,6 @@ START-INFO-DIR-ENTRY
 * F_SETLK: (libc)File Locks.
 * F_SETLKW: (libc)File Locks.
 * F_SETOWN: (libc)Interrupt Input.
-* HAS_CPU_FEATURE: (libc)X86.
 * HUGE_VAL: (libc)Math Error Reporting.
 * HUGE_VALF: (libc)Math Error Reporting.
 * HUGE_VALL: (libc)Math Error Reporting.
@@ -454,6 +454,7 @@ START-INFO-DIR-ENTRY
 * X_OK: (libc)Testing File Access.
 * _Complex_I: (libc)Complex Numbers.
 * _Exit: (libc)Termination Internals.
+* _Fork: (libc)Creating a Process.
 * _IOFBF: (libc)Controlling Buffering.
 * _IOLBF: (libc)Controlling Buffering.
 * _IONBF: (libc)Controlling Buffering.
@@ -715,7 +716,9 @@ START-INFO-DIR-ENTRY
 * clogfNx: (libc)Exponents and Logarithms.
 * clogl: (libc)Exponents and Logarithms.
 * close: (libc)Opening and Closing Files.
+* close_range: (libc)Opening and Closing Files.
 * closedir: (libc)Reading/Closing Directory.
+* closefrom: (libc)Opening and Closing Files.
 * closelog: (libc)closelog.
 * cnd_broadcast: (libc)ISO C Condition Variables.
 * cnd_destroy: (libc)ISO C Condition Variables.
@@ -2101,160 +2104,127 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: libc.info,  Node: Hooks for Malloc,  Next: Statistics of Malloc,  Prev: Heap Consistency Checking,  Up: Unconstrained Allocation
+File: libc.info,  Node: Heap Consistency Checking,  Next: Statistics of Malloc,  Prev: Malloc Tunable Parameters,  Up: Unconstrained Allocation
 
-3.2.3.9 Memory Allocation Hooks
-...............................
+3.2.3.8 Heap Consistency Checking
+.................................
 
-The GNU C Library lets you modify the behavior of ‘malloc’, ‘realloc’,
-and ‘free’ by specifying appropriate hook functions.  You can use these
-hooks to help you debug programs that use dynamic memory allocation, for
-example.
+You can ask ‘malloc’ to check the consistency of dynamic memory by using
+the ‘mcheck’ function and preloading the malloc debug library
+‘libc_malloc_debug’ using the LD_PRELOAD environment variable.  This
+function is a GNU extension, declared in ‘mcheck.h’.
 
-   The hook variables are declared in ‘malloc.h’.
+ -- Function: int mcheck (void (*ABORTFN) (enum mcheck_status STATUS))
 
- -- Variable: __malloc_hook
+     Preliminary: | MT-Unsafe race:mcheck const:malloc_hooks | AS-Unsafe
+     corrupt | AC-Unsafe corrupt | *Note POSIX Safety Concepts::.
 
-     The value of this variable is a pointer to the function that
-     ‘malloc’ uses whenever it is called.  You should define this
-     function to look like ‘malloc’; that is, like:
+     Calling ‘mcheck’ tells ‘malloc’ to perform occasional consistency
+     checks.  These will catch things such as writing past the end of a
+     block that was allocated with ‘malloc’.
 
-          void *FUNCTION (size_t SIZE, const void *CALLER)
+     The ABORTFN argument is the function to call when an inconsistency
+     is found.  If you supply a null pointer, then ‘mcheck’ uses a
+     default function which prints a message and calls ‘abort’ (*note
+     Aborting a Program::).  The function you supply is called with one
+     argument, which says what sort of inconsistency was detected; its
+     type is described below.
 
-     The value of CALLER is the return address found on the stack when
-     the ‘malloc’ function was called.  This value allows you to trace
-     the memory consumption of the program.
+     It is too late to begin allocation checking once you have allocated
+     anything with ‘malloc’.  So ‘mcheck’ does nothing in that case.
+     The function returns ‘-1’ if you call it too late, and ‘0’
+     otherwise (when it is successful).
 
- -- Variable: __realloc_hook
+     The easiest way to arrange to call ‘mcheck’ early enough is to use
+     the option ‘-lmcheck’ when you link your program; then you don’t
+     need to modify your program source at all.  Alternatively you might
+     use a debugger to insert a call to ‘mcheck’ whenever the program is
+     started, for example these gdb commands will automatically call
+     ‘mcheck’ whenever the program starts:
 
-     The value of this variable is a pointer to function that ‘realloc’
-     uses whenever it is called.  You should define this function to
-     look like ‘realloc’; that is, like:
+          (gdb) break main
+          Breakpoint 1, main (argc=2, argv=0xbffff964) at whatever.c:10
+          (gdb) command 1
+          Type commands for when breakpoint 1 is hit, one per line.
+          End with a line saying just "end".
+          >call mcheck(0)
+          >continue
+          >end
+          (gdb) ...
 
-          void *FUNCTION (void *PTR, size_t SIZE, const void *CALLER)
+     This will however only work if no initialization function of any
+     object involved calls any of the ‘malloc’ functions since ‘mcheck’
+     must be called before the first such function.
 
-     The value of CALLER is the return address found on the stack when
-     the ‘realloc’ function was called.  This value allows you to trace
-     the memory consumption of the program.
+ -- Function: enum mcheck_status mprobe (void *POINTER)
+     Preliminary: | MT-Unsafe race:mcheck const:malloc_hooks | AS-Unsafe
+     corrupt | AC-Unsafe corrupt | *Note POSIX Safety Concepts::.
 
- -- Variable: __free_hook
+     The ‘mprobe’ function lets you explicitly check for inconsistencies
+     in a particular allocated block.  You must have already called
+     ‘mcheck’ at the beginning of the program, to do its occasional
+     checks; calling ‘mprobe’ requests an additional consistency check
+     to be done at the time of the call.
 
-     The value of this variable is a pointer to function that ‘free’
-     uses whenever it is called.  You should define this function to
-     look like ‘free’; that is, like:
+     The argument POINTER must be a pointer returned by ‘malloc’ or
+     ‘realloc’.  ‘mprobe’ returns a value that says what inconsistency,
+     if any, was found.  The values are described below.
 
-          void FUNCTION (void *PTR, const void *CALLER)
+ -- Data Type: enum mcheck_status
+     This enumerated type describes what kind of inconsistency was
+     detected in an allocated block, if any.  Here are the possible
+     values:
 
-     The value of CALLER is the return address found on the stack when
-     the ‘free’ function was called.  This value allows you to trace the
-     memory consumption of the program.
+     ‘MCHECK_DISABLED’
+          ‘mcheck’ was not called before the first allocation.  No
+          consistency checking can be done.
+     ‘MCHECK_OK’
+          No inconsistency detected.
+     ‘MCHECK_HEAD’
+          The data immediately before the block was modified.  This
+          commonly happens when an array index or pointer is decremented
+          too far.
+     ‘MCHECK_TAIL’
+          The data immediately after the block was modified.  This
+          commonly happens when an array index or pointer is incremented
+          too far.
+     ‘MCHECK_FREE’
+          The block was already freed.
 
- -- Variable: __memalign_hook
+   Another possibility to check for and guard against bugs in the use of
+‘malloc’, ‘realloc’ and ‘free’ is to set the environment variable
+‘MALLOC_CHECK_’.  When ‘MALLOC_CHECK_’ is set to a non-zero value less
+than 4, a special (less efficient) implementation is used which is
+designed to be tolerant against simple errors, such as double calls of
+‘free’ with the same argument, or overruns of a single byte (off-by-one
+bugs).  Not all such errors can be protected against, however, and
+memory leaks can result.  Like in the case of ‘mcheck’, one would need
+to preload the ‘libc_malloc_debug’ library to enable ‘MALLOC_CHECK_’
+functionality.  Without this preloaded library, setting ‘MALLOC_CHECK_’
+will have no effect.
 
-     The value of this variable is a pointer to function that
-     ‘aligned_alloc’, ‘memalign’, ‘posix_memalign’ and ‘valloc’ use
-     whenever they are called.  You should define this function to look
-     like ‘aligned_alloc’; that is, like:
+   Any detected heap corruption results in immediate termination of the
+process.
 
-          void *FUNCTION (size_t ALIGNMENT, size_t SIZE, const void *CALLER)
+   There is one problem with ‘MALLOC_CHECK_’: in SUID or SGID binaries
+it could possibly be exploited since diverging from the normal programs
+behavior it now writes something to the standard error descriptor.
+Therefore the use of ‘MALLOC_CHECK_’ is disabled by default for SUID and
+SGID binaries.  It can be enabled again by the system administrator by
+adding a file ‘/etc/suid-debug’ (the content is not important it could
+be empty).
 
-     The value of CALLER is the return address found on the stack when
-     the ‘aligned_alloc’, ‘memalign’, ‘posix_memalign’ or ‘valloc’
-     functions are called.  This value allows you to trace the memory
-     consumption of the program.
-
-   You must make sure that the function you install as a hook for one of
-these functions does not call that function recursively without
-restoring the old value of the hook first!  Otherwise, your program will
-get stuck in an infinite recursion.  Before calling the function
-recursively, one should make sure to restore all the hooks to their
-previous value.  When coming back from the recursive call, all the hooks
-should be resaved since a hook might modify itself.
-
-   An issue to look out for is the time at which the malloc hook
-functions can be safely installed.  If the hook functions call the
-malloc-related functions recursively, it is necessary that malloc has
-already properly initialized itself at the time when ‘__malloc_hook’
-etc.  is assigned to.  On the other hand, if the hook functions provide
-a complete malloc implementation of their own, it is vital that the
-hooks are assigned to _before_ the very first ‘malloc’ call has
-completed, because otherwise a chunk obtained from the ordinary,
-un-hooked malloc may later be handed to ‘__free_hook’, for example.
-
-   Here is an example showing how to use ‘__malloc_hook’ and
-‘__free_hook’ properly.  It installs a function that prints out
-information every time ‘malloc’ or ‘free’ is called.  We just assume
-here that ‘realloc’ and ‘memalign’ are not used in our program.
-
-     /* Prototypes for __malloc_hook, __free_hook */
-     #include <malloc.h>
-
-     /* Prototypes for our hooks.  */
-     static void my_init_hook (void);
-     static void *my_malloc_hook (size_t, const void *);
-     static void my_free_hook (void*, const void *);
-
-     static void
-     my_init (void)
-     {
-       old_malloc_hook = __malloc_hook;
-       old_free_hook = __free_hook;
-       __malloc_hook = my_malloc_hook;
-       __free_hook = my_free_hook;
-     }
-
-     static void *
-     my_malloc_hook (size_t size, const void *caller)
-     {
-       void *result;
-       /* Restore all old hooks */
-       __malloc_hook = old_malloc_hook;
-       __free_hook = old_free_hook;
-       /* Call recursively */
-       result = malloc (size);
-       /* Save underlying hooks */
-       old_malloc_hook = __malloc_hook;
-       old_free_hook = __free_hook;
-       /* ‘printf’ might call ‘malloc’, so protect it too. */
-       printf ("malloc (%u) returns %p\n", (unsigned int) size, result);
-       /* Restore our own hooks */
-       __malloc_hook = my_malloc_hook;
-       __free_hook = my_free_hook;
-       return result;
-     }
-
-     static void
-     my_free_hook (void *ptr, const void *caller)
-     {
-       /* Restore all old hooks */
-       __malloc_hook = old_malloc_hook;
-       __free_hook = old_free_hook;
-       /* Call recursively */
-       free (ptr);
-       /* Save underlying hooks */
-       old_malloc_hook = __malloc_hook;
-       old_free_hook = __free_hook;
-       /* ‘printf’ might call ‘free’, so protect it too. */
-       printf ("freed pointer %p\n", ptr);
-       /* Restore our own hooks */
-       __malloc_hook = my_malloc_hook;
-       __free_hook = my_free_hook;
-     }
-
-     main ()
-     {
-       my_init ();
-       ...
-     }
-
-   The ‘mcheck’ function (*note Heap Consistency Checking::) works by
-installing such hooks.
+   So, what’s the difference between using ‘MALLOC_CHECK_’ and linking
+with ‘-lmcheck’?  ‘MALLOC_CHECK_’ is orthogonal with respect to
+‘-lmcheck’.  ‘-lmcheck’ has been added for backward compatibility.  Both
+‘MALLOC_CHECK_’ and ‘-lmcheck’ should uncover the same bugs - but using
+‘MALLOC_CHECK_’ you don’t need to recompile your application.
 
 
-File: libc.info,  Node: Statistics of Malloc,  Next: Summary of Malloc,  Prev: Hooks for Malloc,  Up: Unconstrained Allocation
+File: libc.info,  Node: Statistics of Malloc,  Next: Summary of Malloc,  Prev: Heap Consistency Checking,  Up: Unconstrained Allocation
 
-3.2.3.10 Statistics for Memory Allocation with ‘malloc’
-.......................................................
+3.2.3.9 Statistics for Memory Allocation with ‘malloc’
+......................................................
 
 You can get information about dynamic memory allocation by calling the
 ‘mallinfo2’ function.  This function and its associated data type are
@@ -2316,7 +2286,7 @@ version.
 
 File: libc.info,  Node: Summary of Malloc,  Prev: Statistics of Malloc,  Up: Unconstrained Allocation
 
-3.2.3.11 Summary of ‘malloc’-Related Functions
+3.2.3.10 Summary of ‘malloc’-Related Functions
 ..............................................
 
 Here is a summary of the functions that work with ‘malloc’:
@@ -2366,19 +2336,6 @@ Here is a summary of the functions that work with ‘malloc’:
      dynamically allocated memory, and to call ABORTFN when an
      inconsistency is found.  *Note Heap Consistency Checking::.
 
-‘void *(*__malloc_hook) (size_t SIZE, const void *CALLER)’
-     A pointer to a function that ‘malloc’ uses whenever it is called.
-
-‘void *(*__realloc_hook) (void *PTR, size_t SIZE, const void *CALLER)’
-     A pointer to a function that ‘realloc’ uses whenever it is called.
-
-‘void (*__free_hook) (void *PTR, const void *CALLER)’
-     A pointer to a function that ‘free’ uses whenever it is called.
-
-‘void (*__memalign_hook) (size_t SIZE, size_t ALIGNMENT, const void *CALLER)’
-     A pointer to a function that ‘aligned_alloc’, ‘memalign’,
-     ‘posix_memalign’ and ‘valloc’ use whenever they are called.
-
 ‘struct mallinfo2 mallinfo2 (void)’
      Return information about the current dynamic memory usage.  *Note
      Statistics of Malloc::.
@@ -2416,9 +2373,14 @@ File: libc.info,  Node: Tracing malloc,  Next: Using the Memory Debugger,  Up: A
 
  -- Function: void mtrace (void)
 
-     Preliminary: | MT-Unsafe env race:mtrace const:malloc_hooks init |
-     AS-Unsafe init heap corrupt lock | AC-Unsafe init corrupt lock fd
-     mem | *Note POSIX Safety Concepts::.
+     Preliminary: | MT-Unsafe env race:mtrace init | AS-Unsafe init heap
+     corrupt lock | AC-Unsafe init corrupt lock fd mem | *Note POSIX
+     Safety Concepts::.
+
+     The ‘mtrace’ function provides a way to trace memory allocation
+     events in the program that calls it.  It is disabled by default in
+     the library and can be enabled by preloading the debugging library
+     ‘libc_malloc_debug’ using the ‘LD_PRELOAD’ environment variable.
 
      When the ‘mtrace’ function is called it looks for an environment
      variable named ‘MALLOC_TRACE’.  This variable is supposed to
@@ -2430,20 +2392,20 @@ File: libc.info,  Node: Tracing malloc,  Next: Using the Memory Debugger,  Up: A
      application is installed with the SUID or SGID bit set.
 
      If the named file is successfully opened, ‘mtrace’ installs special
-     handlers for the functions ‘malloc’, ‘realloc’, and ‘free’ (*note
-     Hooks for Malloc::).  From then on, all uses of these functions are
-     traced and protocolled into the file.  There is now of course a
-     speed penalty for all calls to the traced functions so tracing
-     should not be enabled during normal use.
+     handlers for the functions ‘malloc’, ‘realloc’, and ‘free’.  From
+     then on, all uses of these functions are traced and protocolled
+     into the file.  There is now of course a speed penalty for all
+     calls to the traced functions so tracing should not be enabled
+     during normal use.
 
      This function is a GNU extension and generally not available on
      other systems.  The prototype can be found in ‘mcheck.h’.
 
  -- Function: void muntrace (void)
 
-     Preliminary: | MT-Unsafe race:mtrace const:malloc_hooks locale |
-     AS-Unsafe corrupt heap | AC-Unsafe corrupt mem lock fd | *Note
-     POSIX Safety Concepts::.
+     Preliminary: | MT-Unsafe race:mtrace locale | AS-Unsafe corrupt
+     heap | AC-Unsafe corrupt mem lock fd | *Note POSIX Safety
+     Concepts::.
 
      The ‘muntrace’ function can be called after ‘mtrace’ was used to
      enable tracing the ‘malloc’ calls.  If no (successful) call of
@@ -2686,6 +2648,13 @@ will not have any effect or return incorrect statistics when a
 replacement ‘malloc’ is in use.  However, failure to replace these
 functions typically does not result in crashes or other incorrect
 application behavior, but may result in static linking failures.
+
+   There are other functions (‘reallocarray’, ‘strdup’, etc.)  in the
+GNU C Library that are not listed above but return newly allocated
+memory to callers.  Replacement of these functions is not supported and
+may produce incorrect results.  The GNU C Library implementations of
+these functions call the replacement allocator functions whenever
+available, so they will work correctly with ‘malloc’ replacement.
 
    ---------- Footnotes ----------
 
@@ -3530,7 +3499,7 @@ Here is how you would get the same results with ‘malloc’ and ‘free’:
      int
      open2 (char *str1, char *str2, int flags, int mode)
      {
-       char *name = (char *) malloc (strlen (str1) + strlen (str2) + 1);
+       char *name = malloc (strlen (str1) + strlen (str2) + 1);
        int desc;
        if (name == 0)
          fatal ("virtual memory exceeded");
@@ -5772,19 +5741,17 @@ common example:
      {
        va_list ap, ap2;
        size_t total = 1;
-       const char *s;
-       char *result;
 
        va_start (ap, str);
        va_copy (ap2, ap);
 
        /* Determine how much space we need.  */
-       for (s = str; s != NULL; s = va_arg (ap, const char *))
+       for (const char *s = str; s != NULL; s = va_arg (ap, const char *))
          total += strlen (s);
 
        va_end (ap);
 
-       result = (char *) malloc (total);
+       char *result = malloc (total);
        if (result != NULL)
          {
            result[0] = '\0';
@@ -5812,45 +5779,44 @@ efficiently:
      char *
      concat (const char *str, ...)
      {
-       va_list ap;
        size_t allocated = 100;
-       char *result = (char *) malloc (allocated);
+       char *result = malloc (allocated);
 
        if (result != NULL)
          {
+           va_list ap;
+           size_t resultlen = 0;
            char *newp;
-           char *wp;
-           const char *s;
 
            va_start (ap, str);
 
-           wp = result;
-           for (s = str; s != NULL; s = va_arg (ap, const char *))
+           for (const char *s = str; s != NULL; s = va_arg (ap, const char *))
              {
                size_t len = strlen (s);
 
                /* Resize the allocated memory if necessary.  */
-               if (wp + len + 1 > result + allocated)
+               if (resultlen + len + 1 > allocated)
                  {
-                   allocated = (allocated + len) * 2;
-                   newp = (char *) realloc (result, allocated);
+                   allocated += len;
+                   newp = reallocarray (result, allocated, 2);
+                   allocated *= 2;
                    if (newp == NULL)
                      {
                        free (result);
                        return NULL;
                      }
-                   wp = newp + (wp - result);
                    result = newp;
                  }
 
-               wp = mempcpy (wp, s, len);
+               memcpy (result + resultlen, s, len);
+               resultlen += len;
              }
 
            /* Terminate the result string.  */
-           *wp++ = '\0';
+           result[resultlen++] = '\0';
 
            /* Resize memory to the optimal size.  */
-           newp = realloc (result, wp - result);
+           newp = realloc (result, resultlen);
            if (newp != NULL)
              result = newp;
 
@@ -6628,8 +6594,8 @@ when there are many strings.
              {
                /* Allocate the needed space. +1 for terminating
                   ‘'\0'’ byte.  */
-               transformed = (char *) xrealloc (transformed,
-                                                transformed_length + 1);
+               transformed = xrealloc (transformed,
+                                       transformed_length + 1);
 
                /* The return value is not interesting because we know
                   how long the transformed string is.  */
@@ -6670,9 +6636,9 @@ would look like this:
              {
                /* Allocate the needed space. +1 for terminating
                   ‘L'\0'’ wide character.  */
-               transformed = (wchar_t *) xrealloc (transformed,
-                                                   (transformed_length + 1)
-                                                   * sizeof (wchar_t));
+               transformed = xreallocarray (transformed,
+                                            transformed_length + 1,
+                                            sizeof *transformed);
 
                /* The return value is not interesting because we know
                   how long the transformed string is.  */

@@ -1,6 +1,6 @@
 This is libc.info, produced by makeinfo version 6.7 from libc.texinfo.
 
-This is ‘The GNU C Library Reference Manual’, for version 2.33.
+This is ‘The GNU C Library Reference Manual’, for version 2.34.
 
    Copyright © 1993–2021 Free Software Foundation, Inc.
 
@@ -43,7 +43,8 @@ START-INFO-DIR-ENTRY
 * CLOCK_REALTIME: (libc)Getting the Time.
 * COLL_WEIGHTS_MAX: (libc)Utility Limits.
 * CPU_CLR: (libc)CPU Affinity.
-* CPU_FEATURE_USABLE: (libc)X86.
+* CPU_FEATURE_ACTIVE: (libc)X86.
+* CPU_FEATURE_PRESENT: (libc)X86.
 * CPU_ISSET: (libc)CPU Affinity.
 * CPU_SET: (libc)CPU Affinity.
 * CPU_SETSIZE: (libc)CPU Affinity.
@@ -246,7 +247,6 @@ START-INFO-DIR-ENTRY
 * F_SETLK: (libc)File Locks.
 * F_SETLKW: (libc)File Locks.
 * F_SETOWN: (libc)Interrupt Input.
-* HAS_CPU_FEATURE: (libc)X86.
 * HUGE_VAL: (libc)Math Error Reporting.
 * HUGE_VALF: (libc)Math Error Reporting.
 * HUGE_VALL: (libc)Math Error Reporting.
@@ -454,6 +454,7 @@ START-INFO-DIR-ENTRY
 * X_OK: (libc)Testing File Access.
 * _Complex_I: (libc)Complex Numbers.
 * _Exit: (libc)Termination Internals.
+* _Fork: (libc)Creating a Process.
 * _IOFBF: (libc)Controlling Buffering.
 * _IOLBF: (libc)Controlling Buffering.
 * _IONBF: (libc)Controlling Buffering.
@@ -715,7 +716,9 @@ START-INFO-DIR-ENTRY
 * clogfNx: (libc)Exponents and Logarithms.
 * clogl: (libc)Exponents and Logarithms.
 * close: (libc)Opening and Closing Files.
+* close_range: (libc)Opening and Closing Files.
 * closedir: (libc)Reading/Closing Directory.
+* closefrom: (libc)Opening and Closing Files.
 * closelog: (libc)closelog.
 * cnd_broadcast: (libc)ISO C Condition Variables.
 * cnd_destroy: (libc)ISO C Condition Variables.
@@ -2116,7 +2119,7 @@ Variable and Constant Macro Index
 * (*__gconv_init_fct):                   glibc iconv Implementation.
                                                               (line 409)
 * (void):                                Error Messages.      (line 257)
-* _ATFILE_SOURCE:                        Feature Test Macros. (line 237)
+* _ATFILE_SOURCE:                        Feature Test Macros. (line 280)
 * _Complex_I:                            Complex Numbers.     (line  21)
 * _CS_LFS64_CFLAGS:                      String Parameters.   (line  71)
 * _CS_LFS64_LDFLAGS:                     String Parameters.   (line  78)
@@ -2127,19 +2130,20 @@ Variable and Constant Macro Index
 * _CS_LFS_LIBS:                          String Parameters.   (line  57)
 * _CS_LFS_LINTFLAGS:                     String Parameters.   (line  64)
 * _CS_PATH:                              String Parameters.   (line  38)
-* _DEFAULT_SOURCE:                       Feature Test Macros. (line 221)
+* _DEFAULT_SOURCE:                       Feature Test Macros. (line 264)
+* _DYNAMIC_STACK_SIZE_SOURCE:            Feature Test Macros. (line 291)
 * _FILE_OFFSET_BITS:                     Feature Test Macros. (line 143)
-* _FORTIFY_SOURCE:                       Feature Test Macros. (line 241)
-* _GNU_SOURCE:                           Feature Test Macros. (line 214)
+* _FORTIFY_SOURCE:                       Feature Test Macros. (line 284)
+* _GNU_SOURCE:                           Feature Test Macros. (line 257)
 * _IOFBF:                                Controlling Buffering.
                                                               (line  45)
 * _IOLBF:                                Controlling Buffering.
                                                               (line  51)
 * _IONBF:                                Controlling Buffering.
                                                               (line  57)
-* _ISOC11_SOURCE:                        Feature Test Macros. (line 176)
-* _ISOC2X_SOURCE:                        Feature Test Macros. (line 181)
-* _ISOC99_SOURCE:                        Feature Test Macros. (line 170)
+* _ISOC11_SOURCE:                        Feature Test Macros. (line 213)
+* _ISOC2X_SOURCE:                        Feature Test Macros. (line 218)
+* _ISOC99_SOURCE:                        Feature Test Macros. (line 207)
 * _LARGEFILE64_SOURCE:                   Feature Test Macros. (line 124)
 * _LARGEFILE_SOURCE:                     Feature Test Macros. (line 112)
 * _PATH_FSTAB:                           Mount Information.   (line  29)
@@ -2206,7 +2210,7 @@ Variable and Constant Macro Index
 * _POSIX_VDISABLE:                       Special Characters.  (line  22)
 * _POSIX_VDISABLE <1>:                   Options for Files.   (line  40)
 * _POSIX_VERSION:                        Version Supported.   (line   6)
-* _REENTRANT:                            Feature Test Macros. (line 248)
+* _REENTRANT:                            Feature Test Macros. (line 296)
 * _SC_2_C_DEV:                           Constants for Sysconf.
                                                               (line 306)
 * _SC_2_FORT_DEV:                        Constants for Sysconf.
@@ -2323,6 +2327,8 @@ Variable and Constant Macro Index
                                                               (line 104)
 * _SC_MESSAGE_PASSING:                   Constants for Sysconf.
                                                               (line 109)
+* _SC_MINSIGSTKSZ:                       Constants for Sysconf.
+                                                              (line 643)
 * _SC_MQ_OPEN_MAX:                       Constants for Sysconf.
                                                               (line 144)
 * _SC_MQ_PRIO_MAX:                       Constants for Sysconf.
@@ -2410,6 +2416,8 @@ Variable and Constant Macro Index
                                                               (line 594)
 * _SC_SIGQUEUE_MAX:                      Constants for Sysconf.
                                                               (line 166)
+* _SC_SIGSTKSZ:                          Constants for Sysconf.
+                                                              (line 649)
 * _SC_SSIZE_MAX:                         Constants for Sysconf.
                                                               (line 574)
 * _SC_STREAM_MAX:                        Constants for Sysconf.
@@ -2490,18 +2498,16 @@ Variable and Constant Macro Index
                                                               (line 524)
 * _SC_XOPEN_XPG4:                        Constants for Sysconf.
                                                               (line 528)
-* _THREAD_SAFE:                          Feature Test Macros. (line 249)
+* _THREAD_SAFE:                          Feature Test Macros. (line 297)
+* _TIME_BITS:                            Feature Test Macros. (line 175)
 * _XOPEN_SOURCE:                         Feature Test Macros. (line  90)
 * _XOPEN_SOURCE_EXTENDED:                Feature Test Macros. (line  91)
-* __free_hook:                           Hooks for Malloc.    (line  37)
 * __libc_single_threaded:                Single-Threaded.     (line  15)
-* __malloc_hook:                         Hooks for Malloc.    (line  13)
-* __memalign_hook:                       Hooks for Malloc.    (line  49)
-* __realloc_hook:                        Hooks for Malloc.    (line  25)
-* __STDC_WANT_IEC_60559_BFP_EXT__:       Feature Test Macros. (line 193)
-* __STDC_WANT_IEC_60559_FUNCS_EXT__:     Feature Test Macros. (line 200)
-* __STDC_WANT_IEC_60559_TYPES_EXT__:     Feature Test Macros. (line 207)
-* __STDC_WANT_LIB_EXT2__:                Feature Test Macros. (line 187)
+* __STDC_WANT_IEC_60559_BFP_EXT__:       Feature Test Macros. (line 230)
+* __STDC_WANT_IEC_60559_EXT__:           Feature Test Macros. (line 251)
+* __STDC_WANT_IEC_60559_FUNCS_EXT__:     Feature Test Macros. (line 237)
+* __STDC_WANT_IEC_60559_TYPES_EXT__:     Feature Test Macros. (line 244)
+* __STDC_WANT_LIB_EXT2__:                Feature Test Macros. (line 224)
 * ABDAY_1:                               The Elegant and Fast Way.
                                                               (line  35)
 * ABDAY_2:                               The Elegant and Fast Way.
@@ -2672,6 +2678,10 @@ Variable and Constant Macro Index
 * CLOCKS_PER_SEC:                        CPU Time.            (line  33)
 * CLOCK_MONOTONIC:                       Getting the Time.    (line  61)
 * CLOCK_REALTIME:                        Getting the Time.    (line  49)
+* CLOSE_RANGE_CLOEXEC:                   Opening and Closing Files.
+                                                              (line 226)
+* CLOSE_RANGE_UNSHARE:                   Opening and Closing Files.
+                                                              (line 222)
 * CODESET:                               The Elegant and Fast Way.
                                                               (line  31)
 * COLL_WEIGHTS_MAX:                      Utility Limits.      (line  35)
@@ -4084,8 +4094,7 @@ Program and File Index
 * ls:                                    File Attributes.     (line   6)
 * malloc.h:                              Malloc Tunable Parameters.
                                                               (line   8)
-* malloc.h <1>:                          Hooks for Malloc.    (line  11)
-* malloc.h <2>:                          Statistics of Malloc.
+* malloc.h <1>:                          Statistics of Malloc.
                                                               (line   9)
 * math.h:                                Mathematics.         (line   9)
 * math.h <1>:                            Floating Point Classes.
@@ -4095,7 +4104,7 @@ Program and File Index
                                                               (line  14)
 * math.h <4>:                            Rounding Functions.  (line   6)
 * mcheck.h:                              Heap Consistency Checking.
-                                                              (line   8)
+                                                              (line   9)
 * mkdir:                                 Creating Directories.
                                                               (line   6)
 * netdb.h:                               Host Names.          (line  13)
