@@ -4,7 +4,7 @@
 ;;; Don't parse this file wihout knowing GCC gengtype internals.
 ;;; This file should be parsed by the same gengtype which wrote it.
 
-(!version  "11.2.1 20210914")
+(!version  "11.2.1 20211002")
 (!srcdir  "../../gcc/gcc")
 (!languages 11 ada brig c cp d fortran go jit lto objc objcp)
 (!fileslist 225
@@ -23892,7 +23892,7 @@
   nil 0 nil nil )
  
  (!type struct 1515 nil  gc_used "tm_clone_hasher"
-  (!srcfileloc  "varasm.c" 6337)
+  (!srcfileloc  "varasm.c" 6343)
   (!fields 0 )
   nil 2047 nil nil )
  
@@ -23901,11 +23901,11 @@
    (!type already_seen 1516)
   )
   gc_pointed_to "hash_table<tm_clone_hasher>"
-  (!srcfileloc  "varasm.c" 6337)
+  (!srcfileloc  "varasm.c" 6343)
   (!fields 1 
    (!pair  "tm_clone_hasher"
     (!type already_seen 1515)
-    (!srcfileloc  "varasm.c" 6337)
+    (!srcfileloc  "varasm.c" 6343)
     nil )
   )
  )
@@ -29181,7 +29181,7 @@
   nil 0 nil nil )
  
  (!type struct 2202 nil  gc_used "module_hasher"
-  (!srcfileloc  "fortran/trans-decl.c" 5182)
+  (!srcfileloc  "fortran/trans-decl.c" 5183)
   (!fields 0 )
   nil 32 nil nil )
  
@@ -29190,11 +29190,11 @@
    (!type already_seen 2203)
   )
   gc_pointed_to "hash_table<module_hasher>"
-  (!srcfileloc  "fortran/trans-decl.c" 5182)
+  (!srcfileloc  "fortran/trans-decl.c" 5183)
   (!fields 1 
    (!pair  "module_hasher"
     (!type already_seen 2202)
-    (!srcfileloc  "fortran/trans-decl.c" 5182)
+    (!srcfileloc  "fortran/trans-decl.c" 5183)
     nil )
   )
  )
@@ -29970,11 +29970,11 @@
   nil )
  (!pair  "module_hasher"
   (!type already_seen 2202)
-  (!srcfileloc  "fortran/trans-decl.c" 5182)
+  (!srcfileloc  "fortran/trans-decl.c" 5183)
   nil )
  (!pair  "hash_table<module_hasher>"
   (!type already_seen 2203)
-  (!srcfileloc  "fortran/trans-decl.c" 5182)
+  (!srcfileloc  "fortran/trans-decl.c" 5183)
   nil )
  (!pair  "tree_frame_info"
   (!type already_seen 650)
@@ -31276,11 +31276,11 @@
   nil )
  (!pair  "tm_clone_hasher"
   (!type already_seen 1515)
-  (!srcfileloc  "varasm.c" 6337)
+  (!srcfileloc  "varasm.c" 6343)
   nil )
  (!pair  "hash_table<tm_clone_hasher>"
   (!type already_seen 1516)
-  (!srcfileloc  "varasm.c" 6337)
+  (!srcfileloc  "varasm.c" 6343)
   nil )
  (!pair  "const_rtx_desc_hasher"
   (!type already_seen 994)
@@ -34267,7 +34267,7 @@
   nil )
  (!pair  "module_htab"
   (!type already_seen 2204)
-  (!srcfileloc  "fortran/trans-decl.c" 5182)
+  (!srcfileloc  "fortran/trans-decl.c" 5183)
   nil )
  (!pair  "saved_local_decls"
   (!type already_seen 23)
@@ -34700,11 +34700,11 @@
   nil )
  (!pair  "start_cleanup_cnt"
   (!type already_seen 2)
-  (!srcfileloc  "cp/decl.c" 8974)
+  (!srcfileloc  "cp/decl.c" 9006)
   nil )
  (!pair  "decomp_type_table"
   (!type already_seen 925)
-  (!srcfileloc  "cp/decl.c" 8427)
+  (!srcfileloc  "cp/decl.c" 8459)
   (!options 
    (!option cache string  "")
   )
@@ -35619,22 +35619,22 @@
   nil )
  (!pair  "elf_fini_array_section"
   (!type already_seen 213)
-  (!srcfileloc  "varasm.c" 8348)
+  (!srcfileloc  "varasm.c" 8354)
   nil )
  (!pair  "elf_init_array_section"
   (!type already_seen 213)
-  (!srcfileloc  "varasm.c" 8347)
+  (!srcfileloc  "varasm.c" 8353)
   nil )
  (!pair  "tm_clone_hash"
   (!type already_seen 1517)
-  (!srcfileloc  "varasm.c" 6337)
+  (!srcfileloc  "varasm.c" 6343)
   (!options 
    (!option cache string  "")
   )
  )
  (!pair  "weakref_targets"
   (!type already_seen 23)
-  (!srcfileloc  "varasm.c" 5992)
+  (!srcfileloc  "varasm.c" 5998)
   nil )
  (!pair  "const_desc_htab"
   (!type already_seen 1510)
@@ -35918,7 +35918,7 @@
   nil )
  (!pair  "stack_check_libfunc"
   (!type already_seen 100)
-  (!srcfileloc  "explow.c" 1637)
+  (!srcfileloc  "explow.c" 1638)
   nil )
  (!pair  "hard_reg_clobbers"
   (!type array 2331 nil  gc_used "NUM_MACHINE_MODES" 
