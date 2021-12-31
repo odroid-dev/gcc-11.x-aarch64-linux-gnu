@@ -33235,7 +33235,6 @@ File: gcc.info,  Node: Common Function Attributes,  Next: AArch64 Function Attri
 
 The following attributes are supported on most targets.
 
-'access'
 'access (ACCESS-MODE, REF-INDEX)'
 'access (ACCESS-MODE, REF-INDEX, SIZE-INDEX)'
 
@@ -33304,7 +33303,9 @@ The following attributes are supported on most targets.
      The access mode 'none' specifies that the pointer to which it
      applies is not used to access the referenced object at all.  Unless
      the pointer is null the pointed-to object must exist and have at
-     least the size as denoted by the SIZE-INDEX argument.  The object
+     least the size as denoted by the SIZE-INDEX argument.  When the
+     optional SIZE-INDEX argument is omitted for an argument of 'void*'
+     type the actual pointer agument is ignored.  The referenced object
      need not be initialized.  The mode is intended to be used as a
      means to help validate the expected object size, for example in
      functions that call '__builtin_object_size'.  *Note Object Size
@@ -62209,7 +62210,7 @@ look up both forms.
 * ffreestanding <1>:                     C Dialect Options.  (line  326)
 * ffreestanding <2>:                     Warning Options.    (line  416)
 * ffreestanding <3>:                     Common Function Attributes.
-                                                             (line  430)
+                                                             (line  431)
 * ffunction-cse:                         Optimize Options.   (line  435)
 * ffunction-sections:                    Optimize Options.   (line 2606)
 * fgcse:                                 Optimize Options.   (line  504)
@@ -62253,7 +62254,7 @@ look up both forms.
 * finstrument-functions:                 Instrumentation Options.
                                                              (line  792)
 * finstrument-functions <1>:             Common Function Attributes.
-                                                             (line  793)
+                                                             (line  794)
 * finstrument-functions-exclude-file-list: Instrumentation Options.
                                                              (line  828)
 * finstrument-functions-exclude-function-list: Instrumentation Options.
@@ -62384,7 +62385,7 @@ look up both forms.
 * fno-builtin:                           C Dialect Options.  (line  278)
 * fno-builtin <1>:                       Warning Options.    (line  416)
 * fno-builtin <2>:                       Common Function Attributes.
-                                                             (line  430)
+                                                             (line  431)
 * fno-builtin <3>:                       Other Builtins.     (line   21)
 * fno-canonical-system-headers:          Preprocessor Options.
                                                              (line  234)
@@ -62744,7 +62745,7 @@ look up both forms.
 * fsplit-stack:                          Instrumentation Options.
                                                              (line  721)
 * fsplit-stack <1>:                      Common Function Attributes.
-                                                             (line  843)
+                                                             (line  844)
 * fsplit-wide-types:                     Optimize Options.   (line  467)
 * fsplit-wide-types-early:               Optimize Options.   (line  475)
 * fssa-backprop:                         Optimize Options.   (line 1181)
@@ -64898,7 +64899,7 @@ look up both forms.
 * P:                                     Preprocessor Options.
                                                              (line  368)
 * p <1>:                                 Common Function Attributes.
-                                                             (line  793)
+                                                             (line  794)
 * pagezero_size:                         Darwin Options.     (line  196)
 * param:                                 Optimize Options.   (line 2676)
 * pass-exit-codes:                       Overall Options.    (line  601)
@@ -64916,7 +64917,7 @@ look up both forms.
 * pg:                                    Instrumentation Options.
                                                              (line   20)
 * pg <1>:                                Common Function Attributes.
-                                                             (line  793)
+                                                             (line  794)
 * pie:                                   Link Options.       (line  175)
 * pipe:                                  Overall Options.    (line  609)
 * plt:                                   RISC-V Options.     (line   13)
@@ -65181,12 +65182,12 @@ look up both forms.
 * Wformat <1>:                           Warning Options.    (line  441)
 * Wformat <2>:                           Warning Options.    (line 1635)
 * Wformat <3>:                           Common Function Attributes.
-                                                             (line  390)
+                                                             (line  391)
 * Wformat-contains-nul:                  Warning Options.    (line  455)
 * Wformat-extra-args:                    Warning Options.    (line  459)
 * Wformat-nonliteral:                    Warning Options.    (line  552)
 * Wformat-nonliteral <1>:                Common Function Attributes.
-                                                             (line  455)
+                                                             (line  456)
 * Wformat-overflow:                      Warning Options.    (line  473)
 * Wformat-overflow <1>:                  Warning Options.    (line  484)
 * Wformat-security:                      Warning Options.    (line  557)
@@ -66405,11 +66406,11 @@ Keyword Index
                                                              (line   97)
 * address_operand:                       Simple Constraints. (line  156)
 * alias function attribute:              Common Function Attributes.
-                                                             (line   84)
+                                                             (line   85)
 * alias variable attribute:              Common Variable Attributes.
                                                              (line    9)
 * aligned function attribute:            Common Function Attributes.
-                                                             (line  103)
+                                                             (line  104)
 * aligned type attribute:                Common Type Attributes.
                                                              (line    8)
 * aligned variable attribute:            Common Variable Attributes.
@@ -66418,9 +66419,9 @@ Keyword Index
 * alloca:                                Other Builtins.     (line    6)
 * alloca vs variable-length arrays:      Variable Length.    (line   35)
 * alloc_align function attribute:        Common Function Attributes.
-                                                             (line  131)
+                                                             (line  132)
 * alloc_size function attribute:         Common Function Attributes.
-                                                             (line  151)
+                                                             (line  152)
 * alloc_size type attribute:             Common Type Attributes.
                                                              (line  136)
 * alloc_size variable attribute:         Common Variable Attributes.
@@ -66434,7 +66435,7 @@ Keyword Index
 * altivec variable attribute, PowerPC:   PowerPC Variable Attributes.
                                                              (line   12)
 * always_inline function attribute:      Common Function Attributes.
-                                                             (line  177)
+                                                             (line  178)
 * AMD GCN Options:                       AMD GCN Options.    (line    6)
 * AMD1:                                  Standards.          (line   13)
 * amdgpu_hsa_kernel function attribute, AMD GCN: AMD GCN Function Attributes.
@@ -66458,7 +66459,7 @@ Keyword Index
 * arrays of variable length:             Variable Length.    (line    6)
 * arrays, non-lvalue:                    Subscripting.       (line    6)
 * artificial function attribute:         Common Function Attributes.
-                                                             (line  187)
+                                                             (line  188)
 * asin:                                  Other Builtins.     (line    6)
 * asinf:                                 Other Builtins.     (line    6)
 * asinh:                                 Other Builtins.     (line    6)
@@ -66485,7 +66486,7 @@ Keyword Index
 * assembly language in C, basic:         Basic Asm.          (line    6)
 * assembly language in C, extended:      Extended Asm.       (line    6)
 * assume_aligned function attribute:     Common Function Attributes.
-                                                             (line  195)
+                                                             (line  196)
 * atan:                                  Other Builtins.     (line    6)
 * atan2:                                 Other Builtins.     (line    6)
 * atan2f:                                Other Builtins.     (line    6)
@@ -66652,7 +66653,7 @@ Keyword Index
 * code, mixed with declarations:         Mixed Labels and Declarations.
                                                              (line    6)
 * cold function attribute:               Common Function Attributes.
-                                                             (line  211)
+                                                             (line  212)
 * cold label attribute:                  Label Attributes.   (line   46)
 * command options:                       Invoking GCC.       (line    6)
 * comments, C++ style:                   C++ Comments.       (line    6)
@@ -66682,7 +66683,7 @@ Keyword Index
 * const applied to function:             Function Attributes.
                                                              (line    6)
 * const function attribute:              Common Function Attributes.
-                                                             (line  227)
+                                                             (line  228)
 * const qualifier:                       Pointers to Arrays. (line    6)
 * constants in constraints:              Simple Constraints. (line   68)
 * constraint modifier characters:        Modifiers.          (line    6)
@@ -66693,10 +66694,10 @@ Keyword Index
 * constructing calls:                    Constructing Calls. (line    6)
 * constructor expressions:               Compound Literals.  (line    6)
 * constructor function attribute:        Common Function Attributes.
-                                                             (line  268)
+                                                             (line  269)
 * contributors:                          Contributors.       (line    6)
 * copy function attribute:               Common Function Attributes.
-                                                             (line  296)
+                                                             (line  297)
 * copy type attribute:                   Common Type Attributes.
                                                              (line  161)
 * copy variable attribute:               Common Variable Attributes.
@@ -66780,7 +66781,7 @@ Keyword Index
 * deprecated enumerator attribute:       Enumerator Attributes.
                                                              (line   28)
 * deprecated function attribute:         Common Function Attributes.
-                                                             (line  328)
+                                                             (line  329)
 * deprecated type attribute:             Common Type Attributes.
                                                              (line  189)
 * deprecated variable attribute:         Common Variable Attributes.
@@ -66791,7 +66792,7 @@ Keyword Index
 * designator lists:                      Designated Inits.   (line   96)
 * designators:                           Designated Inits.   (line   64)
 * destructor function attribute:         Common Function Attributes.
-                                                             (line  268)
+                                                             (line  269)
 * developer options:                     Developer Options.  (line    6)
 * df integer suffix:                     Decimal Float.      (line    6)
 * DF integer suffix:                     Decimal Float.      (line    6)
@@ -66854,7 +66855,7 @@ Keyword Index
 * erff:                                  Other Builtins.     (line    6)
 * erfl:                                  Other Builtins.     (line    6)
 * error function attribute:              Common Function Attributes.
-                                                             (line  352)
+                                                             (line  353)
 * error GCC_COLORS capability:           Diagnostic Message Formatting Options.
                                                              (line   92)
 * error messages:                        Warnings and Errors.
@@ -66892,9 +66893,9 @@ Keyword Index
 * extensions, C++ language:              C++ Extensions.     (line    6)
 * external declaration scope:            Incompatibilities.  (line   80)
 * externally_visible function attribute: Common Function Attributes.
-                                                             (line  369)
+                                                             (line  370)
 * extra NOP instructions at the function entry point: Common Function Attributes.
-                                                             (line 1007)
+                                                             (line 1008)
 * F in constraint:                       Simple Constraints. (line   92)
 * fabs:                                  Other Builtins.     (line    6)
 * fabsf:                                 Other Builtins.     (line    6)
@@ -66938,7 +66939,7 @@ Keyword Index
 * fixit-insert GCC_COLORS capability:    Diagnostic Message Formatting Options.
                                                              (line  120)
 * flatten function attribute:            Common Function Attributes.
-                                                             (line  382)
+                                                             (line  383)
 * flexible array members:                Zero Length.        (line    6)
 * float as function value type:          Incompatibilities.  (line  141)
 * floating point precision:              Disappointments.    (line   68)
@@ -66961,9 +66962,9 @@ Keyword Index
 * force_align_arg_pointer function attribute, x86: x86 Function Attributes.
                                                              (line  100)
 * format function attribute:             Common Function Attributes.
-                                                             (line  390)
+                                                             (line  391)
 * format_arg function attribute:         Common Function Attributes.
-                                                             (line  455)
+                                                             (line  456)
 * Fortran:                               G++ and GCC.        (line    6)
 * forwarder_section function attribute, Epiphany: Epiphany Function Attributes.
                                                              (line   13)
@@ -66994,19 +66995,19 @@ Keyword Index
                                                              (line    6)
 * function, size of pointer to:          Pointer Arith.      (line    6)
 * functions in arbitrary sections:       Common Function Attributes.
-                                                             (line 1091)
+                                                             (line 1092)
 * functions that are dynamically resolved: Common Function Attributes.
-                                                             (line  556)
+                                                             (line  557)
 * functions that are passed arguments in registers on x86-32: x86 Function Attributes.
                                                              (line   76)
 * functions that behave like malloc:     Common Function Attributes.
-                                                             (line  685)
+                                                             (line  686)
 * functions that have no side effects:   Common Function Attributes.
-                                                             (line  227)
+                                                             (line  228)
 * functions that have no side effects <1>: Common Function Attributes.
-                                                             (line 1025)
+                                                             (line 1026)
 * functions that never return:           Common Function Attributes.
-                                                             (line  939)
+                                                             (line  940)
 * functions that pop the argument stack on x86-32: x86 Function Attributes.
                                                              (line    9)
 * functions that pop the argument stack on x86-32 <1>: x86 Function Attributes.
@@ -67016,11 +67017,11 @@ Keyword Index
 * functions that pop the argument stack on x86-32 <3>: x86 Function Attributes.
                                                              (line  108)
 * functions that return more than once:  Common Function Attributes.
-                                                             (line 1082)
+                                                             (line 1083)
 * functions with non-null pointer arguments: Common Function Attributes.
-                                                             (line  885)
+                                                             (line  886)
 * functions with printf, scanf, strftime or strfmon style arguments: Common Function Attributes.
-                                                             (line  390)
+                                                             (line  391)
 * function_return function attribute, x86: x86 Function Attributes.
                                                              (line  628)
 * function_vector function attribute, H8/300: H8/300 Function Attributes.
@@ -67075,7 +67076,7 @@ Keyword Index
 * GNU C Compiler:                        G++ and GCC.        (line    6)
 * GNU Compiler Collection:               G++ and GCC.        (line    6)
 * gnu_inline function attribute:         Common Function Attributes.
-                                                             (line  510)
+                                                             (line  511)
 * Go:                                    G++ and GCC.        (line    6)
 * goto with computed label:              Labels as Values.   (line    6)
 * gprof:                                 Instrumentation Options.
@@ -67095,7 +67096,7 @@ Keyword Index
 * hosted environment <2>:                C Dialect Options.  (line  326)
 * hosted implementation:                 Standards.          (line   13)
 * hot function attribute:                Common Function Attributes.
-                                                             (line  546)
+                                                             (line  547)
 * hot label attribute:                   Label Attributes.   (line   39)
 * hotpatch function attribute, S/390:    S/390 Function Attributes.
                                                              (line    9)
@@ -67113,7 +67114,7 @@ Keyword Index
 * identifier names, dollar signs in:     Dollar Signs.       (line    6)
 * identifiers, names in assembler code:  Asm Labels.         (line    6)
 * ifunc function attribute:              Common Function Attributes.
-                                                             (line  556)
+                                                             (line  557)
 * ilogb:                                 Other Builtins.     (line    6)
 * ilogbf:                                Other Builtins.     (line    6)
 * ilogbl:                                Other Builtins.     (line    6)
@@ -67139,7 +67140,7 @@ Keyword Index
 * indirect calls, PowerPC:               PowerPC Function Attributes.
                                                              (line   10)
 * indirect functions:                    Common Function Attributes.
-                                                             (line  556)
+                                                             (line  557)
 * indirect_branch function attribute, x86: x86 Function Attributes.
                                                              (line  619)
 * indirect_return function attribute, x86: x86 Function Attributes.
@@ -67323,7 +67324,7 @@ Keyword Index
 * ldexpf:                                Other Builtins.     (line    6)
 * ldexpl:                                Other Builtins.     (line    6)
 * leaf function attribute:               Common Function Attributes.
-                                                             (line  646)
+                                                             (line  647)
 * length-zero arrays:                    Zero Length.        (line    6)
 * lgamma:                                Other Builtins.     (line    6)
 * lgammaf:                               Other Builtins.     (line    6)
@@ -67429,7 +67430,7 @@ Keyword Index
                                                              (line   77)
 * malloc:                                Other Builtins.     (line    6)
 * malloc function attribute:             Common Function Attributes.
-                                                             (line  685)
+                                                             (line  686)
 * matching constraint:                   Simple Constraints. (line  137)
 * may_alias type attribute:              Common Type Attributes.
                                                              (line  234)
@@ -67561,7 +67562,7 @@ Keyword Index
 * nocf_check function attribute:         x86 Function Attributes.
                                                              (line  636)
 * noclone function attribute:            Common Function Attributes.
-                                                             (line  854)
+                                                             (line  855)
 * nocommon variable attribute:           Common Variable Attributes.
                                                              (line  176)
 * nocompression function attribute, MIPS: MIPS Function Attributes.
@@ -67569,9 +67570,9 @@ Keyword Index
 * noinit variable attribute:             Common Variable Attributes.
                                                              (line  407)
 * noinline function attribute:           Common Function Attributes.
-                                                             (line  860)
+                                                             (line  861)
 * noipa function attribute:              Common Function Attributes.
-                                                             (line  871)
+                                                             (line  872)
 * nomicromips function attribute:        MIPS Function Attributes.
                                                              (line   91)
 * nomips16 function attribute, MIPS:     MIPS Function Attributes.
@@ -67580,19 +67581,19 @@ Keyword Index
 * non-static inline function:            Inline.             (line   82)
 * nonlocal gotos:                        Nonlocal Gotos.     (line    6)
 * nonnull function attribute:            Common Function Attributes.
-                                                             (line  885)
+                                                             (line  886)
 * nonstring variable attribute:          Common Variable Attributes.
                                                              (line  237)
 * noplt function attribute:              Common Function Attributes.
-                                                             (line  915)
+                                                             (line  916)
 * noreturn function attribute:           Common Function Attributes.
-                                                             (line  939)
+                                                             (line  940)
 * nosave_low_regs function attribute, SH: SH Function Attributes.
                                                              (line   34)
 * note GCC_COLORS capability:            Diagnostic Message Formatting Options.
                                                              (line   98)
 * nothrow function attribute:            Common Function Attributes.
-                                                             (line  973)
+                                                             (line  974)
 * notshared type attribute, ARM:         ARM Type Attributes.
                                                              (line    6)
 * not_nested function attribute, NDS32:  NDS32 Function Attributes.
@@ -67602,27 +67603,27 @@ Keyword Index
 * no_gccisr function attribute, AVR:     AVR Function Attributes.
                                                              (line   33)
 * no_icf function attribute:             Common Function Attributes.
-                                                             (line  789)
+                                                             (line  790)
 * no_instrument_function function attribute: Common Function Attributes.
-                                                             (line  793)
+                                                             (line  794)
 * no_profile_instrument_function function attribute: Common Function Attributes.
-                                                             (line  799)
+                                                             (line  800)
 * no_reorder function attribute:         Common Function Attributes.
-                                                             (line  804)
+                                                             (line  805)
 * no_sanitize function attribute:        Common Function Attributes.
-                                                             (line  812)
+                                                             (line  813)
 * no_sanitize_address function attribute: Common Function Attributes.
-                                                             (line  824)
+                                                             (line  825)
 * no_sanitize_thread function attribute: Common Function Attributes.
-                                                             (line  832)
+                                                             (line  833)
 * no_sanitize_undefined function attribute: Common Function Attributes.
-                                                             (line  837)
+                                                             (line  838)
 * no_split_stack function attribute:     Common Function Attributes.
-                                                             (line  843)
+                                                             (line  844)
 * no_stack_limit function attribute:     Common Function Attributes.
-                                                             (line  849)
+                                                             (line  850)
 * no_stack_protector function attribute: Common Function Attributes.
-                                                             (line 1159)
+                                                             (line 1160)
 * Nvidia PTX options:                    Nvidia PTX Options. (line    6)
 * nvptx options:                         Nvidia PTX Options. (line    6)
 * o in constraint:                       Simple Constraints. (line   23)
@@ -67652,7 +67653,7 @@ Keyword Index
 * OpenRISC Options:                      OpenRISC Options.   (line    6)
 * operand constraints, asm:              Constraints.        (line    6)
 * optimize function attribute:           Common Function Attributes.
-                                                             (line  981)
+                                                             (line  982)
 * optimize options:                      Optimize Options.   (line    6)
 * options to control diagnostics formatting: Diagnostic Message Formatting Options.
                                                              (line    6)
@@ -67699,7 +67700,7 @@ Keyword Index
 * partial_save function attribute, NDS32: NDS32 Function Attributes.
                                                              (line   31)
 * patchable_function_entry function attribute: Common Function Attributes.
-                                                             (line 1007)
+                                                             (line 1008)
 * path GCC_COLORS capability:            Diagnostic Message Formatting Options.
                                                              (line  101)
 * pcs function attribute, ARM:           ARM Function Attributes.
@@ -67712,7 +67713,7 @@ Keyword Index
 * pmf:                                   Bound member functions.
                                                              (line    6)
 * pointer arguments:                     Common Function Attributes.
-                                                             (line  256)
+                                                             (line  257)
 * pointer arguments in variadic functions: Variadic Pointer Args.
                                                              (line    6)
 * pointer to member function:            Bound member functions.
@@ -67799,7 +67800,7 @@ Keyword Index
                                                              (line    6)
 * PRU Options:                           PRU Options.        (line    6)
 * pure function attribute:               Common Function Attributes.
-                                                             (line 1025)
+                                                             (line 1026)
 * push address instruction:              Simple Constraints. (line  152)
 * putchar:                               Other Builtins.     (line    6)
 * puts:                                  Other Builtins.     (line    6)
@@ -67863,13 +67864,13 @@ Keyword Index
 * restricted this pointer:               Restricted Pointers.
                                                              (line    6)
 * retain function attribute:             Common Function Attributes.
-                                                             (line 1287)
+                                                             (line 1288)
 * retain variable attribute:             Common Variable Attributes.
                                                              (line  360)
 * returns_nonnull function attribute:    Common Function Attributes.
-                                                             (line 1072)
+                                                             (line 1073)
 * returns_twice function attribute:      Common Function Attributes.
-                                                             (line 1082)
+                                                             (line 1083)
 * rindex:                                Other Builtins.     (line    6)
 * rint:                                  Other Builtins.     (line    6)
 * rintf:                                 Other Builtins.     (line    6)
@@ -67923,7 +67924,7 @@ Keyword Index
                                                              (line    9)
 * search path:                           Directory Options.  (line    6)
 * section function attribute:            Common Function Attributes.
-                                                             (line 1091)
+                                                             (line 1092)
 * section variable attribute:            Common Variable Attributes.
                                                              (line  292)
 * secure_call function attribute, ARC:   ARC Function Attributes.
@@ -67931,7 +67932,7 @@ Keyword Index
 * selectany variable attribute:          Microsoft Windows Variable Attributes.
                                                              (line   16)
 * sentinel function attribute:           Common Function Attributes.
-                                                             (line 1108)
+                                                             (line 1109)
 * setjmp:                                Global Register Variables.
                                                              (line   92)
 * setjmp incompatibilities:              Incompatibilities.  (line   39)
@@ -67972,7 +67973,7 @@ Keyword Index
 * significandl:                          Other Builtins.     (line    6)
 * SIMD:                                  C Dialect Options.  (line  361)
 * simd function attribute:               Common Function Attributes.
-                                                             (line 1135)
+                                                             (line 1136)
 * simple constraints:                    Simple Constraints. (line    6)
 * sin:                                   Other Builtins.     (line    6)
 * sincos:                                Other Builtins.     (line    6)
@@ -68016,7 +68017,7 @@ Keyword Index
 * sseregparm function attribute, x86:    x86 Function Attributes.
                                                              (line   93)
 * stack_protect function attribute:      Common Function Attributes.
-                                                             (line 1154)
+                                                             (line 1155)
 * Statement Attributes:                  Statement Attributes.
                                                              (line    6)
 * statements inside expressions:         Statement Exprs.    (line    6)
@@ -68064,7 +68065,7 @@ Keyword Index
 * surprises in C++:                      C++ Misunderstandings.
                                                              (line    6)
 * symver function attribute:             Common Function Attributes.
-                                                             (line 1201)
+                                                             (line 1202)
 * syntax checking:                       Warning Options.    (line   13)
 * syscall_linkage function attribute, IA-64: IA-64 Function Attributes.
                                                              (line    9)
@@ -68078,7 +68079,7 @@ Keyword Index
 * tanhl:                                 Other Builtins.     (line    6)
 * tanl:                                  Other Builtins.     (line    6)
 * target function attribute:             Common Function Attributes.
-                                                             (line 1162)
+                                                             (line 1163)
 * target function attribute <1>:         ARM Function Attributes.
                                                              (line   77)
 * target function attribute <2>:         Nios II Function Attributes.
@@ -68346,7 +68347,7 @@ Keyword Index
                                                              (line  506)
 * target-dependent options:              Submodel Options.   (line    6)
 * target_clones function attribute:      Common Function Attributes.
-                                                             (line 1245)
+                                                             (line 1246)
 * TC1:                                   Standards.          (line   13)
 * TC2:                                   Standards.          (line   13)
 * TC3:                                   Standards.          (line   13)
@@ -68439,7 +68440,7 @@ Keyword Index
 * unresolved references and -nodefaultlibs: Link Options.    (line  154)
 * unresolved references and -nostdlib:   Link Options.       (line  154)
 * unused function attribute:             Common Function Attributes.
-                                                             (line 1272)
+                                                             (line 1273)
 * unused label attribute:                Label Attributes.   (line   32)
 * unused type attribute:                 Common Type Attributes.
                                                              (line  410)
@@ -68454,7 +68455,7 @@ Keyword Index
 * urls:                                  Diagnostic Message Formatting Options.
                                                              (line  144)
 * used function attribute:               Common Function Attributes.
-                                                             (line 1277)
+                                                             (line 1278)
 * used variable attribute:               Common Variable Attributes.
                                                              (line  351)
 * User stack pointer in interrupts on the Blackfin: Blackfin Function Attributes.
@@ -68553,7 +68554,7 @@ Keyword Index
 * vfprintf:                              Other Builtins.     (line    6)
 * vfscanf:                               Other Builtins.     (line    6)
 * visibility function attribute:         Common Function Attributes.
-                                                             (line 1298)
+                                                             (line 1299)
 * visibility type attribute:             Common Type Attributes.
                                                              (line  446)
 * visibility variable attribute:         Common Variable Attributes.
@@ -68598,7 +68599,7 @@ Keyword Index
                                                              (line  786)
 * warning for unknown pragmas:           Warning Options.    (line 1349)
 * warning function attribute:            Common Function Attributes.
-                                                             (line  352)
+                                                             (line  353)
 * warning GCC_COLORS capability:         Diagnostic Message Formatting Options.
                                                              (line   95)
 * warning messages:                      Warning Options.    (line    6)
@@ -68611,13 +68612,13 @@ Keyword Index
                                                              (line  106)
 * warn_unused type attribute:            C++ Attributes.     (line   71)
 * warn_unused_result function attribute: Common Function Attributes.
-                                                             (line 1398)
+                                                             (line 1399)
 * weak function attribute:               Common Function Attributes.
-                                                             (line 1415)
+                                                             (line 1416)
 * weak variable attribute:               Common Variable Attributes.
                                                              (line  403)
 * weakref function attribute:            Common Function Attributes.
-                                                             (line 1427)
+                                                             (line 1428)
 * whitespace:                            Incompatibilities.  (line  112)
 * Windows Options for x86:               x86 Windows Options.
                                                              (line    6)
@@ -68644,7 +68645,7 @@ Keyword Index
 * zero-length arrays:                    Zero Length.        (line    6)
 * zero-size structures:                  Empty Structures.   (line    6)
 * zero_call_used_regs function attribute: Common Function Attributes.
-                                                             (line 1469)
+                                                             (line 1470)
 * zSeries options:                       zSeries Options.    (line    6)
 
 
@@ -68810,280 +68811,280 @@ Node: Cast to Union1404602
 Node: Mixed Labels and Declarations1406336
 Node: Function Attributes1406973
 Node: Common Function Attributes1411440
-Ref: Common Function Attributes-Footnote-11485182
-Node: AArch64 Function Attributes1485499
-Node: AMD GCN Function Attributes1491693
-Node: ARC Function Attributes1494746
-Node: ARM Function Attributes1497683
-Node: AVR Function Attributes1502822
-Node: Blackfin Function Attributes1507357
-Node: BPF Function Attributes1509854
-Node: CR16 Function Attributes1510442
-Node: C-SKY Function Attributes1510961
-Node: Epiphany Function Attributes1512260
-Node: H8/300 Function Attributes1515015
-Node: IA-64 Function Attributes1516213
-Node: M32C Function Attributes1517255
-Node: M32R/D Function Attributes1519593
-Node: m68k Function Attributes1521067
-Node: MCORE Function Attributes1522011
-Node: MeP Function Attributes1522822
-Node: MicroBlaze Function Attributes1524123
-Node: Microsoft Windows Function Attributes1525630
-Node: MIPS Function Attributes1530199
-Node: MSP430 Function Attributes1535817
-Node: NDS32 Function Attributes1539896
-Node: Nios II Function Attributes1542320
-Node: Nvidia PTX Function Attributes1543617
-Node: PowerPC Function Attributes1544232
-Node: RISC-V Function Attributes1551006
-Node: RL78 Function Attributes1552422
-Node: RX Function Attributes1553661
-Node: S/390 Function Attributes1556208
-Node: SH Function Attributes1558036
-Node: Symbian OS Function Attributes1561464
-Node: V850 Function Attributes1561800
-Node: Visium Function Attributes1562345
-Node: x86 Function Attributes1562873
-Node: Xstormy16 Function Attributes1586675
-Node: Variable Attributes1587182
-Node: Common Variable Attributes1588715
-Node: ARC Variable Attributes1609180
-Node: AVR Variable Attributes1609562
-Node: Blackfin Variable Attributes1614724
-Node: H8/300 Variable Attributes1615582
-Node: IA-64 Variable Attributes1616655
-Node: M32R/D Variable Attributes1617406
-Node: MeP Variable Attributes1618189
-Node: Microsoft Windows Variable Attributes1620282
-Node: MSP430 Variable Attributes1622735
-Node: Nvidia PTX Variable Attributes1623949
-Node: PowerPC Variable Attributes1624566
-Node: RL78 Variable Attributes1625123
-Node: V850 Variable Attributes1625542
-Node: x86 Variable Attributes1626175
-Node: Xstormy16 Variable Attributes1627231
-Node: Type Attributes1627801
-Node: Common Type Attributes1629465
-Node: ARC Type Attributes1651222
-Node: ARM Type Attributes1651694
-Node: MeP Type Attributes1652476
-Node: PowerPC Type Attributes1652878
-Node: x86 Type Attributes1653867
-Node: Label Attributes1654859
-Node: Enumerator Attributes1656886
-Node: Statement Attributes1658205
-Node: Attribute Syntax1659688
-Node: Function Prototypes1670946
-Node: C++ Comments1672726
-Node: Dollar Signs1673245
-Node: Character Escapes1673710
-Node: Alignment1673994
-Node: Inline1675647
-Node: Volatiles1680464
-Node: Using Assembly Language with C1683363
-Node: Basic Asm1684600
-Node: Extended Asm1690050
-Ref: Volatile1694164
-Ref: AssemblerTemplate1698277
-Ref: OutputOperands1702517
-Ref: FlagOutputOperands1709480
-Ref: InputOperands1712427
-Ref: Clobbers and Scratch Registers1716695
-Ref: GotoLabels1725336
-Ref: x86Operandmodifiers1728959
-Ref: x86floatingpointasmoperands1733775
-Ref: msp430Operandmodifiers1737104
-Node: Constraints1738762
-Node: Simple Constraints1739868
-Node: Multi-Alternative1747182
-Node: Modifiers1748857
-Node: Machine Constraints1751656
-Node: Asm Labels1807881
-Node: Explicit Register Variables1809501
-Ref: Explicit Reg Vars1809715
-Node: Global Register Variables1810324
-Ref: Global Reg Vars1810532
-Node: Local Register Variables1815314
-Ref: Local Reg Vars1815534
-Node: Size of an asm1819162
-Node: Alternate Keywords1820640
-Node: Incomplete Enums1822145
-Node: Function Names1822902
-Node: Return Address1824806
-Node: Vector Extensions1829393
-Node: Offsetof1839158
-Node: __sync Builtins1839991
-Node: __atomic Builtins1846434
-Node: Integer Overflow Builtins1860059
-Node: x86 specific memory model extensions for transactional memory1866542
-Node: Object Size Checking1867808
-Node: Other Builtins1874064
-Node: Target Builtins1925712
-Node: AArch64 Built-in Functions1927487
-Node: Alpha Built-in Functions1928175
-Node: Altera Nios II Built-in Functions1931223
-Node: ARC Built-in Functions1935592
-Node: ARC SIMD Built-in Functions1940804
-Node: ARM iWMMXt Built-in Functions1949700
-Node: ARM C Language Extensions (ACLE)1956696
-Node: ARM Floating Point Status and Control Intrinsics1957973
-Node: ARM ARMv8-M Security Extensions1958458
-Node: AVR Built-in Functions1959738
-Node: Blackfin Built-in Functions1963499
-Node: BPF Built-in Functions1964117
-Node: FR-V Built-in Functions1965017
-Node: Argument Types1965880
-Node: Directly-mapped Integer Functions1967634
-Node: Directly-mapped Media Functions1968718
-Node: Raw read/write Functions1976924
-Node: Other Built-in Functions1977832
-Node: MIPS DSP Built-in Functions1979018
-Node: MIPS Paired-Single Support1991515
-Node: MIPS Loongson Built-in Functions1993014
-Node: Paired-Single Arithmetic1999536
-Node: Paired-Single Built-in Functions2000484
-Node: MIPS-3D Built-in Functions2003151
-Node: MIPS SIMD Architecture (MSA) Support2008545
-Node: MIPS SIMD Architecture Built-in Functions2011385
-Node: Other MIPS Built-in Functions2038239
-Node: MSP430 Built-in Functions2039248
-Node: NDS32 Built-in Functions2040649
-Node: picoChip Built-in Functions2041942
-Node: Basic PowerPC Built-in Functions2043291
-Node: Basic PowerPC Built-in Functions Available on all Configurations2044149
-Node: Basic PowerPC Built-in Functions Available on ISA 2.052052658
-Node: Basic PowerPC Built-in Functions Available on ISA 2.062057493
-Node: Basic PowerPC Built-in Functions Available on ISA 2.072059573
-Node: Basic PowerPC Built-in Functions Available on ISA 3.02060427
-Node: Basic PowerPC Built-in Functions Available on ISA 3.12067405
-Node: PowerPC AltiVec/VSX Built-in Functions2070618
-Node: PowerPC AltiVec Built-in Functions on ISA 2.052078687
-Node: PowerPC AltiVec Built-in Functions Available on ISA 2.062104087
-Node: PowerPC AltiVec Built-in Functions Available on ISA 2.072111153
-Node: PowerPC AltiVec Built-in Functions Available on ISA 3.02120963
-Node: PowerPC AltiVec Built-in Functions Available on ISA 3.12136680
-Node: PowerPC Hardware Transactional Memory Built-in Functions2169903
-Node: PowerPC Atomic Memory Operation Functions2178418
-Node: PowerPC Matrix-Multiply Assist Built-in Functions2180981
-Node: PRU Built-in Functions2187106
-Node: RISC-V Built-in Functions2188294
-Node: RX Built-in Functions2188705
-Node: S/390 System z Built-in Functions2192707
-Node: SH Built-in Functions2197937
-Node: SPARC VIS Built-in Functions2199665
-Node: TI C6X Built-in Functions2208196
-Node: TILE-Gx Built-in Functions2209227
-Node: TILEPro Built-in Functions2210346
-Node: x86 Built-in Functions2211446
-Node: x86 transactional memory intrinsics2275526
-Node: x86 control-flow protection intrinsics2278793
-Node: Target Format Checks2280564
-Node: Solaris Format Checks2280996
-Node: Darwin Format Checks2281422
-Node: Pragmas2282385
-Node: AArch64 Pragmas2283326
-Node: ARM Pragmas2283783
-Node: M32C Pragmas2284410
-Node: MeP Pragmas2285482
-Node: PRU Pragmas2287534
-Node: RS/6000 and PowerPC Pragmas2288112
-Node: S/390 Pragmas2288852
-Node: Darwin Pragmas2289418
-Node: Solaris Pragmas2290471
-Node: Symbol-Renaming Pragmas2291635
-Node: Structure-Layout Pragmas2293272
-Node: Weak Pragmas2295552
-Node: Diagnostic Pragmas2296287
-Node: Visibility Pragmas2300478
-Node: Push/Pop Macro Pragmas2301163
-Node: Function Specific Option Pragmas2302136
-Node: Loop-Specific Pragmas2304102
-Node: Unnamed Fields2305702
-Node: Thread-Local2307899
-Node: C99 Thread-Local Edits2310005
-Node: C++98 Thread-Local Edits2312003
-Node: Binary constants2315448
-Node: C++ Extensions2316119
-Node: C++ Volatiles2317749
-Node: Restricted Pointers2320097
-Node: Vague Linkage2321688
-Node: C++ Interface2325311
-Ref: C++ Interface-Footnote-12329108
-Node: Template Instantiation2329246
-Node: Bound member functions2335337
-Node: C++ Attributes2336869
-Node: Function Multiversioning2340941
-Node: Type Traits2342748
-Node: C++ Concepts2349698
-Node: Deprecated Features2351204
-Node: Backwards Compatibility2353029
-Node: Objective-C2354101
-Node: GNU Objective-C runtime API2354708
-Node: Modern GNU Objective-C runtime API2355715
-Node: Traditional GNU Objective-C runtime API2358151
-Node: Executing code before main2358878
-Node: What you can and what you cannot do in +load2361622
-Node: Type encoding2363992
-Node: Legacy type encoding2369133
-Node: @encode2370223
-Node: Method signatures2370768
-Node: Garbage Collection2372760
-Node: Constant string objects2375450
-Node: compatibility_alias2377959
-Node: Exceptions2378684
-Node: Synchronization2381394
-Node: Fast enumeration2382578
-Node: Using fast enumeration2382890
-Node: c99-like fast enumeration syntax2384101
-Node: Fast enumeration details2384804
-Node: Fast enumeration protocol2387144
-Node: Messaging with the GNU Objective-C runtime2390296
-Node: Dynamically registering methods2391668
-Node: Forwarding hook2393359
-Node: Compatibility2396399
-Node: Gcov2402955
-Node: Gcov Intro2403490
-Node: Invoking Gcov2406208
-Node: Gcov and Optimization2429074
-Node: Gcov Data Files2432817
-Node: Cross-profiling2434226
-Node: Gcov-tool2436080
-Node: Gcov-tool Intro2436505
-Node: Invoking Gcov-tool2438475
-Node: Gcov-dump2441053
-Node: Gcov-dump Intro2441376
-Node: Invoking Gcov-dump2441643
-Node: lto-dump2442300
-Node: lto-dump Intro2442599
-Node: Invoking lto-dump2442849
-Node: Trouble2443945
-Node: Actual Bugs2445362
-Node: Interoperation2445809
-Node: Incompatibilities2452700
-Node: Fixed Headers2460852
-Node: Standard Libraries2462510
-Node: Disappointments2463882
-Node: C++ Misunderstandings2468241
-Node: Static Definitions2469052
-Node: Name lookup2470105
-Ref: Name lookup-Footnote-12474886
-Node: Temporaries2475075
-Node: Copy Assignment2477051
-Node: Non-bugs2478886
-Node: Warnings and Errors2489392
-Node: Bugs2491154
-Node: Bug Criteria2491621
-Node: Bug Reporting2493831
-Node: Service2494049
-Node: Contributing2494869
-Node: Funding2495610
-Node: GNU Project2498100
-Node: Copying2498746
-Node: GNU Free Documentation License2536254
-Node: Contributors2561372
-Node: Option Index2602345
-Node: Keyword Index2892495
+Ref: Common Function Attributes-Footnote-11485315
+Node: AArch64 Function Attributes1485632
+Node: AMD GCN Function Attributes1491826
+Node: ARC Function Attributes1494879
+Node: ARM Function Attributes1497816
+Node: AVR Function Attributes1502955
+Node: Blackfin Function Attributes1507490
+Node: BPF Function Attributes1509987
+Node: CR16 Function Attributes1510575
+Node: C-SKY Function Attributes1511094
+Node: Epiphany Function Attributes1512393
+Node: H8/300 Function Attributes1515148
+Node: IA-64 Function Attributes1516346
+Node: M32C Function Attributes1517388
+Node: M32R/D Function Attributes1519726
+Node: m68k Function Attributes1521200
+Node: MCORE Function Attributes1522144
+Node: MeP Function Attributes1522955
+Node: MicroBlaze Function Attributes1524256
+Node: Microsoft Windows Function Attributes1525763
+Node: MIPS Function Attributes1530332
+Node: MSP430 Function Attributes1535950
+Node: NDS32 Function Attributes1540029
+Node: Nios II Function Attributes1542453
+Node: Nvidia PTX Function Attributes1543750
+Node: PowerPC Function Attributes1544365
+Node: RISC-V Function Attributes1551139
+Node: RL78 Function Attributes1552555
+Node: RX Function Attributes1553794
+Node: S/390 Function Attributes1556341
+Node: SH Function Attributes1558169
+Node: Symbian OS Function Attributes1561597
+Node: V850 Function Attributes1561933
+Node: Visium Function Attributes1562478
+Node: x86 Function Attributes1563006
+Node: Xstormy16 Function Attributes1586808
+Node: Variable Attributes1587315
+Node: Common Variable Attributes1588848
+Node: ARC Variable Attributes1609313
+Node: AVR Variable Attributes1609695
+Node: Blackfin Variable Attributes1614857
+Node: H8/300 Variable Attributes1615715
+Node: IA-64 Variable Attributes1616788
+Node: M32R/D Variable Attributes1617539
+Node: MeP Variable Attributes1618322
+Node: Microsoft Windows Variable Attributes1620415
+Node: MSP430 Variable Attributes1622868
+Node: Nvidia PTX Variable Attributes1624082
+Node: PowerPC Variable Attributes1624699
+Node: RL78 Variable Attributes1625256
+Node: V850 Variable Attributes1625675
+Node: x86 Variable Attributes1626308
+Node: Xstormy16 Variable Attributes1627364
+Node: Type Attributes1627934
+Node: Common Type Attributes1629598
+Node: ARC Type Attributes1651355
+Node: ARM Type Attributes1651827
+Node: MeP Type Attributes1652609
+Node: PowerPC Type Attributes1653011
+Node: x86 Type Attributes1654000
+Node: Label Attributes1654992
+Node: Enumerator Attributes1657019
+Node: Statement Attributes1658338
+Node: Attribute Syntax1659821
+Node: Function Prototypes1671079
+Node: C++ Comments1672859
+Node: Dollar Signs1673378
+Node: Character Escapes1673843
+Node: Alignment1674127
+Node: Inline1675780
+Node: Volatiles1680597
+Node: Using Assembly Language with C1683496
+Node: Basic Asm1684733
+Node: Extended Asm1690183
+Ref: Volatile1694297
+Ref: AssemblerTemplate1698410
+Ref: OutputOperands1702650
+Ref: FlagOutputOperands1709613
+Ref: InputOperands1712560
+Ref: Clobbers and Scratch Registers1716828
+Ref: GotoLabels1725469
+Ref: x86Operandmodifiers1729092
+Ref: x86floatingpointasmoperands1733908
+Ref: msp430Operandmodifiers1737237
+Node: Constraints1738895
+Node: Simple Constraints1740001
+Node: Multi-Alternative1747315
+Node: Modifiers1748990
+Node: Machine Constraints1751789
+Node: Asm Labels1808014
+Node: Explicit Register Variables1809634
+Ref: Explicit Reg Vars1809848
+Node: Global Register Variables1810457
+Ref: Global Reg Vars1810665
+Node: Local Register Variables1815447
+Ref: Local Reg Vars1815667
+Node: Size of an asm1819295
+Node: Alternate Keywords1820773
+Node: Incomplete Enums1822278
+Node: Function Names1823035
+Node: Return Address1824939
+Node: Vector Extensions1829526
+Node: Offsetof1839291
+Node: __sync Builtins1840124
+Node: __atomic Builtins1846567
+Node: Integer Overflow Builtins1860192
+Node: x86 specific memory model extensions for transactional memory1866675
+Node: Object Size Checking1867941
+Node: Other Builtins1874197
+Node: Target Builtins1925845
+Node: AArch64 Built-in Functions1927620
+Node: Alpha Built-in Functions1928308
+Node: Altera Nios II Built-in Functions1931356
+Node: ARC Built-in Functions1935725
+Node: ARC SIMD Built-in Functions1940937
+Node: ARM iWMMXt Built-in Functions1949833
+Node: ARM C Language Extensions (ACLE)1956829
+Node: ARM Floating Point Status and Control Intrinsics1958106
+Node: ARM ARMv8-M Security Extensions1958591
+Node: AVR Built-in Functions1959871
+Node: Blackfin Built-in Functions1963632
+Node: BPF Built-in Functions1964250
+Node: FR-V Built-in Functions1965150
+Node: Argument Types1966013
+Node: Directly-mapped Integer Functions1967767
+Node: Directly-mapped Media Functions1968851
+Node: Raw read/write Functions1977057
+Node: Other Built-in Functions1977965
+Node: MIPS DSP Built-in Functions1979151
+Node: MIPS Paired-Single Support1991648
+Node: MIPS Loongson Built-in Functions1993147
+Node: Paired-Single Arithmetic1999669
+Node: Paired-Single Built-in Functions2000617
+Node: MIPS-3D Built-in Functions2003284
+Node: MIPS SIMD Architecture (MSA) Support2008678
+Node: MIPS SIMD Architecture Built-in Functions2011518
+Node: Other MIPS Built-in Functions2038372
+Node: MSP430 Built-in Functions2039381
+Node: NDS32 Built-in Functions2040782
+Node: picoChip Built-in Functions2042075
+Node: Basic PowerPC Built-in Functions2043424
+Node: Basic PowerPC Built-in Functions Available on all Configurations2044282
+Node: Basic PowerPC Built-in Functions Available on ISA 2.052052791
+Node: Basic PowerPC Built-in Functions Available on ISA 2.062057626
+Node: Basic PowerPC Built-in Functions Available on ISA 2.072059706
+Node: Basic PowerPC Built-in Functions Available on ISA 3.02060560
+Node: Basic PowerPC Built-in Functions Available on ISA 3.12067538
+Node: PowerPC AltiVec/VSX Built-in Functions2070751
+Node: PowerPC AltiVec Built-in Functions on ISA 2.052078820
+Node: PowerPC AltiVec Built-in Functions Available on ISA 2.062104220
+Node: PowerPC AltiVec Built-in Functions Available on ISA 2.072111286
+Node: PowerPC AltiVec Built-in Functions Available on ISA 3.02121096
+Node: PowerPC AltiVec Built-in Functions Available on ISA 3.12136813
+Node: PowerPC Hardware Transactional Memory Built-in Functions2170036
+Node: PowerPC Atomic Memory Operation Functions2178551
+Node: PowerPC Matrix-Multiply Assist Built-in Functions2181114
+Node: PRU Built-in Functions2187239
+Node: RISC-V Built-in Functions2188427
+Node: RX Built-in Functions2188838
+Node: S/390 System z Built-in Functions2192840
+Node: SH Built-in Functions2198070
+Node: SPARC VIS Built-in Functions2199798
+Node: TI C6X Built-in Functions2208329
+Node: TILE-Gx Built-in Functions2209360
+Node: TILEPro Built-in Functions2210479
+Node: x86 Built-in Functions2211579
+Node: x86 transactional memory intrinsics2275659
+Node: x86 control-flow protection intrinsics2278926
+Node: Target Format Checks2280697
+Node: Solaris Format Checks2281129
+Node: Darwin Format Checks2281555
+Node: Pragmas2282518
+Node: AArch64 Pragmas2283459
+Node: ARM Pragmas2283916
+Node: M32C Pragmas2284543
+Node: MeP Pragmas2285615
+Node: PRU Pragmas2287667
+Node: RS/6000 and PowerPC Pragmas2288245
+Node: S/390 Pragmas2288985
+Node: Darwin Pragmas2289551
+Node: Solaris Pragmas2290604
+Node: Symbol-Renaming Pragmas2291768
+Node: Structure-Layout Pragmas2293405
+Node: Weak Pragmas2295685
+Node: Diagnostic Pragmas2296420
+Node: Visibility Pragmas2300611
+Node: Push/Pop Macro Pragmas2301296
+Node: Function Specific Option Pragmas2302269
+Node: Loop-Specific Pragmas2304235
+Node: Unnamed Fields2305835
+Node: Thread-Local2308032
+Node: C99 Thread-Local Edits2310138
+Node: C++98 Thread-Local Edits2312136
+Node: Binary constants2315581
+Node: C++ Extensions2316252
+Node: C++ Volatiles2317882
+Node: Restricted Pointers2320230
+Node: Vague Linkage2321821
+Node: C++ Interface2325444
+Ref: C++ Interface-Footnote-12329241
+Node: Template Instantiation2329379
+Node: Bound member functions2335470
+Node: C++ Attributes2337002
+Node: Function Multiversioning2341074
+Node: Type Traits2342881
+Node: C++ Concepts2349831
+Node: Deprecated Features2351337
+Node: Backwards Compatibility2353162
+Node: Objective-C2354234
+Node: GNU Objective-C runtime API2354841
+Node: Modern GNU Objective-C runtime API2355848
+Node: Traditional GNU Objective-C runtime API2358284
+Node: Executing code before main2359011
+Node: What you can and what you cannot do in +load2361755
+Node: Type encoding2364125
+Node: Legacy type encoding2369266
+Node: @encode2370356
+Node: Method signatures2370901
+Node: Garbage Collection2372893
+Node: Constant string objects2375583
+Node: compatibility_alias2378092
+Node: Exceptions2378817
+Node: Synchronization2381527
+Node: Fast enumeration2382711
+Node: Using fast enumeration2383023
+Node: c99-like fast enumeration syntax2384234
+Node: Fast enumeration details2384937
+Node: Fast enumeration protocol2387277
+Node: Messaging with the GNU Objective-C runtime2390429
+Node: Dynamically registering methods2391801
+Node: Forwarding hook2393492
+Node: Compatibility2396532
+Node: Gcov2403088
+Node: Gcov Intro2403623
+Node: Invoking Gcov2406341
+Node: Gcov and Optimization2429207
+Node: Gcov Data Files2432950
+Node: Cross-profiling2434359
+Node: Gcov-tool2436213
+Node: Gcov-tool Intro2436638
+Node: Invoking Gcov-tool2438608
+Node: Gcov-dump2441186
+Node: Gcov-dump Intro2441509
+Node: Invoking Gcov-dump2441776
+Node: lto-dump2442433
+Node: lto-dump Intro2442732
+Node: Invoking lto-dump2442982
+Node: Trouble2444078
+Node: Actual Bugs2445495
+Node: Interoperation2445942
+Node: Incompatibilities2452833
+Node: Fixed Headers2460985
+Node: Standard Libraries2462643
+Node: Disappointments2464015
+Node: C++ Misunderstandings2468374
+Node: Static Definitions2469185
+Node: Name lookup2470238
+Ref: Name lookup-Footnote-12475019
+Node: Temporaries2475208
+Node: Copy Assignment2477184
+Node: Non-bugs2479019
+Node: Warnings and Errors2489525
+Node: Bugs2491287
+Node: Bug Criteria2491754
+Node: Bug Reporting2493964
+Node: Service2494182
+Node: Contributing2495002
+Node: Funding2495743
+Node: GNU Project2498233
+Node: Copying2498879
+Node: GNU Free Documentation License2536387
+Node: Contributors2561505
+Node: Option Index2602478
+Node: Keyword Index2892628
 
 End Tag Table
 
