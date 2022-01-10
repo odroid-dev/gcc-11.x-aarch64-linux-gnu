@@ -126,6 +126,8 @@
 
 #define SO_BUF_LOCK		72
 
+#define SO_RESERVE_MEM		73
+
 
 #if __BITS_PER_LONG == 64 || (defined(__x86_64__) && defined(__ILP32__))
 /* on 64-bit and x32, avoid the ?: operator */
