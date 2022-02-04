@@ -41,6 +41,7 @@ GNU C library functions and macros
 * __va_copy: (libc)Argument Macros.
 * __x86_get_cpuid_feature_leaf: (libc)X86.
 * _Complex_I: (libc)Complex Numbers.
+* _dl_find_object: (libc)Dynamic Linker Introspection.
 * _exit: (libc)Termination Internals.
 * _Exit: (libc)Termination Internals.
 * _flushlbf: (libc)Flushing Buffers.
@@ -143,7 +144,6 @@ GNU C library functions and macros
 * atan2fNx: (libc)Inverse Trig Functions.
 * atan2fN: (libc)Inverse Trig Functions.
 * atan2f: (libc)Inverse Trig Functions.
-* atan2l: (libc)Inverse Trig Functions.
 * atan2: (libc)Inverse Trig Functions.
 * atanfNx: (libc)Inverse Trig Functions.
 * atanfN: (libc)Inverse Trig Functions.
@@ -155,6 +155,7 @@ GNU C library functions and macros
 * atanh: (libc)Hyperbolic Functions.
 * atanl: (libc)Inverse Trig Functions.
 * atan: (libc)Inverse Trig Functions.
+* atan2l: (libc)Inverse Trig Functions.
 * atexit: (libc)Cleanups on Exit.
 * atof: (libc)Parsing of Floats.
 * atoi: (libc)Parsing of Integers.
@@ -289,13 +290,13 @@ GNU C library functions and macros
 * clog10fNx: (libc)Exponents and Logarithms.
 * clog10fN: (libc)Exponents and Logarithms.
 * clog10f: (libc)Exponents and Logarithms.
+* clog10l: (libc)Exponents and Logarithms.
 * clog10: (libc)Exponents and Logarithms.
 * clogfNx: (libc)Exponents and Logarithms.
 * clogfN: (libc)Exponents and Logarithms.
 * clogf: (libc)Exponents and Logarithms.
 * clogl: (libc)Exponents and Logarithms.
 * clog: (libc)Exponents and Logarithms.
-* clog10l: (libc)Exponents and Logarithms.
 * close_range: (libc)Opening and Closing Files.
 * closedir: (libc)Reading/Closing Directory.
 * closefrom: (libc)Opening and Closing Files.
@@ -398,11 +399,15 @@ GNU C library functions and macros
 * dcgettext: (libc)Translation with gettext.
 * dcngettext: (libc)Advanced gettext functions.
 * ddivl: (libc)Misc FP Arithmetic.
+* dfmal: (libc)Misc FP Arithmetic.
 * dgettext: (libc)Translation with gettext.
 * difftime: (libc)Calculating Elapsed Time.
 * dirfd: (libc)Opening a Directory.
 * dirname: (libc)Finding Tokens in a String.
 * div: (libc)Integer Division.
+* DLFO_EH_SEGMENT_TYPE: (libc)Dynamic Linker Introspection.
+* DLFO_STRUCT_HAS_EH_COUNT: (libc)Dynamic Linker Introspection.
+* DLFO_STRUCT_HAS_EH_DBASE: (libc)Dynamic Linker Introspection.
 * dmull: (libc)Misc FP Arithmetic.
 * dngettext: (libc)Advanced gettext functions.
 * drand48_r: (libc)SVID Random.
@@ -410,6 +415,7 @@ GNU C library functions and macros
 * dremf: (libc)Remainder Functions.
 * dreml: (libc)Remainder Functions.
 * drem: (libc)Remainder Functions.
+* dsqrtl: (libc)Misc FP Arithmetic.
 * dsubl: (libc)Misc FP Arithmetic.
 * DTTOIF: (libc)Directory Entries.
 * dup: (libc)Duplicating Descriptors.
@@ -622,6 +628,7 @@ GNU C library functions and macros
 * exp10f: (libc)Exponents and Logarithms.
 * exp10l: (libc)Exponents and Logarithms.
 * exp10: (libc)Exponents and Logarithms.
+* exp2fNx: (libc)Exponents and Logarithms.
 * exp2fN: (libc)Exponents and Logarithms.
 * exp2f: (libc)Exponents and Logarithms.
 * exp2: (libc)Exponents and Logarithms.
@@ -636,7 +643,6 @@ GNU C library functions and macros
 * expm1l: (libc)Exponents and Logarithms.
 * expm1: (libc)Exponents and Logarithms.
 * exp: (libc)Exponents and Logarithms.
-* exp2fNx: (libc)Exponents and Logarithms.
 * exp2l: (libc)Exponents and Logarithms.
 * EXPR_NEST_MAX: (libc)Utility Limits.
 * F_DUPFD: (libc)Duplicating Descriptors.
@@ -710,6 +716,8 @@ GNU C library functions and macros
 * fexecve: (libc)Executing a File.
 * fflush_unlocked: (libc)Flushing Buffers.
 * fflush: (libc)Flushing Buffers.
+* ffmal: (libc)Misc FP Arithmetic.
+* ffma: (libc)Misc FP Arithmetic.
 * fgetc_unlocked: (libc)Character Input.
 * fgetc: (libc)Character Input.
 * fgetgrent_r: (libc)Scanning All Groups.
@@ -746,6 +754,26 @@ GNU C library functions and macros
 * fmaxfNx: (libc)Misc FP Arithmetic.
 * fmaxfN: (libc)Misc FP Arithmetic.
 * fmaxf: (libc)Misc FP Arithmetic.
+* fmaximum_mag_numfNx: (libc)Misc FP Arithmetic.
+* fmaximum_mag_numfN: (libc)Misc FP Arithmetic.
+* fmaximum_mag_numf: (libc)Misc FP Arithmetic.
+* fmaximum_mag_numl: (libc)Misc FP Arithmetic.
+* fmaximum_mag_num: (libc)Misc FP Arithmetic.
+* fmaximum_magfNx: (libc)Misc FP Arithmetic.
+* fmaximum_magfN: (libc)Misc FP Arithmetic.
+* fmaximum_magf: (libc)Misc FP Arithmetic.
+* fmaximum_magl: (libc)Misc FP Arithmetic.
+* fmaximum_mag: (libc)Misc FP Arithmetic.
+* fmaximum_numfNx: (libc)Misc FP Arithmetic.
+* fmaximum_numfN: (libc)Misc FP Arithmetic.
+* fmaximum_numf: (libc)Misc FP Arithmetic.
+* fmaximum_numl: (libc)Misc FP Arithmetic.
+* fmaximum_num: (libc)Misc FP Arithmetic.
+* fmaximumfNx: (libc)Misc FP Arithmetic.
+* fmaximumfN: (libc)Misc FP Arithmetic.
+* fmaximumf: (libc)Misc FP Arithmetic.
+* fmaximuml: (libc)Misc FP Arithmetic.
+* fmaximum: (libc)Misc FP Arithmetic.
 * fmaxl: (libc)Misc FP Arithmetic.
 * fmaxmagfNx: (libc)Misc FP Arithmetic.
 * fmaxmagfN: (libc)Misc FP Arithmetic.
@@ -757,9 +785,31 @@ GNU C library functions and macros
 * fMdivfNx: (libc)Misc FP Arithmetic.
 * fMdivfN: (libc)Misc FP Arithmetic.
 * fmemopen: (libc)String Streams.
+* fMfmafNx: (libc)Misc FP Arithmetic.
+* fMfmafN: (libc)Misc FP Arithmetic.
 * fminfNx: (libc)Misc FP Arithmetic.
 * fminfN: (libc)Misc FP Arithmetic.
 * fminf: (libc)Misc FP Arithmetic.
+* fminimum_mag_numfNx: (libc)Misc FP Arithmetic.
+* fminimum_mag_numfN: (libc)Misc FP Arithmetic.
+* fminimum_mag_numf: (libc)Misc FP Arithmetic.
+* fminimum_mag_numl: (libc)Misc FP Arithmetic.
+* fminimum_mag_num: (libc)Misc FP Arithmetic.
+* fminimum_magfNx: (libc)Misc FP Arithmetic.
+* fminimum_magfN: (libc)Misc FP Arithmetic.
+* fminimum_magf: (libc)Misc FP Arithmetic.
+* fminimum_magl: (libc)Misc FP Arithmetic.
+* fminimum_mag: (libc)Misc FP Arithmetic.
+* fminimum_numfNx: (libc)Misc FP Arithmetic.
+* fminimum_numfN: (libc)Misc FP Arithmetic.
+* fminimum_numf: (libc)Misc FP Arithmetic.
+* fminimum_numl: (libc)Misc FP Arithmetic.
+* fminimum_num: (libc)Misc FP Arithmetic.
+* fminimumfNx: (libc)Misc FP Arithmetic.
+* fminimumfN: (libc)Misc FP Arithmetic.
+* fminimumf: (libc)Misc FP Arithmetic.
+* fminimuml: (libc)Misc FP Arithmetic.
+* fminimum: (libc)Misc FP Arithmetic.
 * fminl: (libc)Misc FP Arithmetic.
 * fminmagfNx: (libc)Misc FP Arithmetic.
 * fminmagfN: (libc)Misc FP Arithmetic.
@@ -774,6 +824,8 @@ GNU C library functions and macros
 * fmodf: (libc)Remainder Functions.
 * fmodl: (libc)Remainder Functions.
 * fmod: (libc)Remainder Functions.
+* fMsqrtfNx: (libc)Misc FP Arithmetic.
+* fMsqrtfN: (libc)Misc FP Arithmetic.
 * fMsubfNx: (libc)Misc FP Arithmetic.
 * fMsubfN: (libc)Misc FP Arithmetic.
 * fmtmsg: (libc)Printing Formatted Messages.
@@ -783,8 +835,12 @@ GNU C library functions and macros
 * fMxaddfN: (libc)Misc FP Arithmetic.
 * fMxdivfNx: (libc)Misc FP Arithmetic.
 * fMxdivfN: (libc)Misc FP Arithmetic.
+* fMxfmafNx: (libc)Misc FP Arithmetic.
+* fMxfmafN: (libc)Misc FP Arithmetic.
 * fMxmulfNx: (libc)Misc FP Arithmetic.
 * fMxmulfN: (libc)Misc FP Arithmetic.
+* fMxsqrtfNx: (libc)Misc FP Arithmetic.
+* fMxsqrtfN: (libc)Misc FP Arithmetic.
 * fMxsubfNx: (libc)Misc FP Arithmetic.
 * fMxsubfN: (libc)Misc FP Arithmetic.
 * fnmatch: (libc)Wildcard Matching.
@@ -835,6 +891,8 @@ GNU C library functions and macros
 * fseek: (libc)File Positioning.
 * fsetpos: (libc)Portable Positioning.
 * fsetpos64: (libc)Portable Positioning.
+* fsqrtl: (libc)Misc FP Arithmetic.
+* fsqrt: (libc)Misc FP Arithmetic.
 * fstat: (libc)Reading Attributes.
 * fstat64: (libc)Reading Attributes.
 * fsubl: (libc)Misc FP Arithmetic.
@@ -895,10 +953,10 @@ GNU C library functions and macros
 * getgroups: (libc)Reading Persona.
 * gethostbyaddr_r: (libc)Host Names.
 * gethostbyaddr: (libc)Host Names.
-* gethostbyname_r: (libc)Host Names.
-* gethostbyname: (libc)Host Names.
 * gethostbyname2_r: (libc)Host Names.
 * gethostbyname2: (libc)Host Names.
+* gethostbyname_r: (libc)Host Names.
+* gethostbyname: (libc)Host Names.
 * gethostent: (libc)Host Names.
 * gethostid: (libc)Host Identification.
 * gethostname: (libc)Host Identification.
@@ -1440,12 +1498,12 @@ GNU C library functions and macros
 * powf: (libc)Exponents and Logarithms.
 * powl: (libc)Exponents and Logarithms.
 * pow: (libc)Exponents and Logarithms.
+* pread64: (libc)I/O Primitives.
 * preadv: (libc)Scatter-Gather.
 * preadv2: (libc)Scatter-Gather.
 * preadv64v2: (libc)Scatter-Gather.
 * preadv64: (libc)Scatter-Gather.
 * pread: (libc)I/O Primitives.
-* pread64: (libc)I/O Primitives.
 * printf_size_info: (libc)Predefined Printf Handlers.
 * printf_size: (libc)Predefined Printf Handlers.
 * printf: (libc)Formatted Output Functions.
@@ -1502,10 +1560,10 @@ GNU C library functions and macros
 * rand: (libc)ISO Random.
 * rawmemchr: (libc)Search Functions.
 * RE_DUP_MAX: (libc)General Limits.
-* readdir64_r: (libc)Reading/Closing Directory.
 * readdir64: (libc)Reading/Closing Directory.
 * readdir_r: (libc)Reading/Closing Directory.
 * readdir: (libc)Reading/Closing Directory.
+* readdir64_r: (libc)Reading/Closing Directory.
 * readlink: (libc)Symbolic Links.
 * readv: (libc)Scatter-Gather.
 * read: (libc)I/O Primitives.
@@ -1548,6 +1606,7 @@ GNU C library functions and macros
 * roundl: (libc)Rounding Functions.
 * round: (libc)Rounding Functions.
 * rpmatch: (libc)Yes-or-No Questions.
+* RSEQ_SIG: (libc)Restartable Sequences.
 * S_IFMT: (libc)Testing File Type.
 * S_ISBLK: (libc)Testing File Type.
 * S_ISCHR: (libc)Testing File Type.
@@ -2002,9 +2061,9 @@ GNU C library functions and macros
 * vwprintf: (libc)Variable Arguments Output.
 * vwscanf: (libc)Variable Arguments Input.
 * W_OK: (libc)Testing File Access.
+* wait3: (libc)BSD Wait Functions.
 * waitpid: (libc)Process Completion.
 * wait: (libc)Process Completion.
-* wait3: (libc)BSD Wait Functions.
 * wait4: (libc)Process Completion.
 * warnx: (libc)Error Messages.
 * warn: (libc)Error Messages.
