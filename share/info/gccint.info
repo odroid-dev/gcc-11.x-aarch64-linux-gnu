@@ -55,7 +55,7 @@ Introduction
 This manual documents the internals of the GNU compilers, including how
 to port them to new targets and some information about how to write
 front ends for new languages.  It corresponds to the compilers (GCC)
-version 11.2.1.  The use of the GNU compilers is documented in a
+version 11.3.1.  The use of the GNU compilers is documented in a
 separate manual.  *Note Introduction: (gcc)Top.
 
  This manual is mainly a reference manual rather than a tutorial.  It
@@ -40785,6 +40785,14 @@ and termination functions:
      collecting constructors and destructors to be run at startup and
      exit.  It is false if we must use 'collect2'.
 
+ -- Target Hook: bool TARGET_DTORS_FROM_CXA_ATEXIT
+     This value is true if the target wants destructors to be queued to
+     be run from __cxa_atexit.  If this is the case then, for each
+     priority level, a new constructor will be entered that registers
+     the destructors for that level with __cxa_atexit (and there will be
+     no destructors emitted).  It is false the method implied by
+     'have_ctors_dtors' is used.
+
  -- Target Hook: void TARGET_ASM_CONSTRUCTOR (rtx SYMBOL, int PRIORITY)
      If defined, a function that outputs assembler code to arrange to
      call the function referenced by SYMBOL at initialization time.
@@ -55475,7 +55483,7 @@ Concept Index
 * lceilMN2:                              Standard Names.     (line 1175)
 * LCSSA:                                 LCSSA.              (line    6)
 * LDD_SUFFIX:                            Macros for Initialization.
-                                                             (line  121)
+                                                             (line  129)
 * ldexpM3 instruction pattern:           Standard Names.     (line  960)
 * LD_FINI_SWITCH:                        Macros for Initialization.
                                                              (line   28)
@@ -55796,7 +55804,7 @@ Concept Index
                                                              (line    6)
 * nil:                                   RTL Objects.        (line   73)
 * NM_FLAGS:                              Macros for Initialization.
-                                                             (line  110)
+                                                             (line  118)
 * nondeterministic finite state automaton: Processor pipeline description.
                                                              (line  304)
 * nonimmediate_operand:                  Machine-Independent Predicates.
@@ -55871,7 +55879,7 @@ Concept Index
 * OBJC_GEN_METHOD_LABEL:                 Label Output.       (line  482)
 * OBJC_JBLEN:                            Misc.               (line 1047)
 * OBJECT_FORMAT_COFF:                    Macros for Initialization.
-                                                             (line   96)
+                                                             (line  104)
 * offsettable address:                   Simple Constraints. (line   23)
 * OFFSET_TYPE:                           Types.              (line    6)
 * OImode:                                Machine Modes.      (line   51)
@@ -55961,7 +55969,7 @@ Concept Index
 * PARM_BOUNDARY:                         Storage Layout.     (line  150)
 * PARM_DECL:                             Declarations.       (line    6)
 * PARSE_LDD_OUTPUT:                      Macros for Initialization.
-                                                             (line  125)
+                                                             (line  133)
 * pass dumps:                            Passes.             (line    6)
 * passes and files of the compiler:      Passes.             (line    6)
 * passing arguments:                     Interface.          (line   36)
@@ -56138,7 +56146,7 @@ Concept Index
                                                              (line    6)
 * REAL_LIBGCC_SPEC:                      Driver.             (line  124)
 * REAL_NM_FILE_NAME:                     Macros for Initialization.
-                                                             (line  105)
+                                                             (line  113)
 * REAL_TYPE:                             Types.              (line    6)
 * REAL_VALUE_ABS:                        Floating Point.     (line   58)
 * REAL_VALUE_ATOF:                       Floating Point.     (line   39)
@@ -56451,7 +56459,7 @@ Concept Index
 * shift:                                 Arithmetic.         (line  173)
 * SHIFT_COUNT_TRUNCATED:                 Misc.               (line  134)
 * SHLIB_SUFFIX:                          Macros for Initialization.
-                                                             (line  133)
+                                                             (line  141)
 * SHORT_ACCUM_TYPE_SIZE:                 Type Layout.        (line   82)
 * SHORT_FRACT_TYPE_SIZE:                 Type Layout.        (line   62)
 * SHORT_IMMEDIATES_SIGN_EXTEND:          Misc.               (line  108)
@@ -56761,11 +56769,11 @@ Concept Index
 * TARGET_ASM_CLOSE_PAREN:                Data Output.        (line  139)
 * TARGET_ASM_CODE_END:                   File Framework.     (line   57)
 * TARGET_ASM_CONSTRUCTOR:                Macros for Initialization.
-                                                             (line   68)
+                                                             (line   76)
 * TARGET_ASM_DECLARE_CONSTANT_NAME:      Label Output.       (line  177)
 * TARGET_ASM_DECL_END:                   Data Output.        (line   44)
 * TARGET_ASM_DESTRUCTOR:                 Macros for Initialization.
-                                                             (line   82)
+                                                             (line   90)
 * TARGET_ASM_ELF_FLAGS_NUMERIC:          File Framework.     (line  120)
 * TARGET_ASM_EMIT_EXCEPT_PERSONALITY:    Dispatch Tables.    (line   89)
 * TARGET_ASM_EMIT_EXCEPT_TABLE_LABEL:    Dispatch Tables.    (line   82)
@@ -56906,6 +56914,8 @@ Concept Index
 * TARGET_DLLIMPORT_DECL_ATTRIBUTES:      Target Attributes.  (line   55)
 * TARGET_DOLOOP_COST_FOR_ADDRESS:        Misc.               (line  751)
 * TARGET_DOLOOP_COST_FOR_GENERIC:        Misc.               (line  740)
+* TARGET_DTORS_FROM_CXA_ATEXIT:          Macros for Initialization.
+                                                             (line   68)
 * TARGET_DWARF_CALLING_CONVENTION:       DWARF.              (line   12)
 * TARGET_DWARF_FRAME_REG_MODE:           Exception Region Output.
                                                              (line  113)
@@ -58236,80 +58246,80 @@ Node: Uninitialized Data1724556
 Node: Label Output1729570
 Node: Initialization1754181
 Node: Macros for Initialization1760142
-Node: Instruction Output1766861
-Node: Dispatch Tables1777490
-Node: Exception Region Output1783241
-Node: Alignment Output1790323
-Node: Debugging Info1794010
-Node: All Debuggers1794664
-Node: DBX Options1797436
-Node: DBX Hooks1802874
-Node: File Names and DBX1804183
-Node: DWARF1806287
-Node: VMS Debug1812102
-Node: Floating Point1812681
-Node: Mode Switching1815436
-Node: Target Attributes1819873
-Node: Emulated TLS1829349
-Node: MIPS Coprocessors1832739
-Node: PCH Target1833898
-Node: C++ ABI1835740
-Node: D Language and ABI1840532
-Node: Named Address Spaces1843475
-Node: Misc1849402
-Ref: TARGET_SHIFT_TRUNCATION_MASK1857273
-Node: Host Config1916359
-Node: Host Common1917428
-Node: Filesystem1919802
-Node: Host Misc1923917
-Node: Fragments1926366
-Node: Target Fragment1927561
-Node: Host Fragment1938373
-Node: Collect21938613
-Node: Header Dirs1941249
-Node: Type Information1942672
-Node: GTY Options1945948
-Node: Inheritance and GTY1957207
-Ref: Inheritance and GTY-Footnote-11958772
-Node: User GC1959042
-Node: GGC Roots1962781
-Node: Files1963494
-Node: Invoking the garbage collector1966201
-Node: Troubleshooting1967706
-Node: Plugins1968781
-Node: Plugins loading1969910
-Node: Plugin API1971009
-Node: Plugins pass1978876
-Node: Plugins GC1980847
-Node: Plugins description1982564
-Node: Plugins attr1983100
-Node: Plugins recording1985380
-Node: Plugins gate1986230
-Node: Plugins tracking1986821
-Node: Plugins building1987409
-Node: LTO1990910
-Node: LTO Overview1991782
-Node: LTO object file layout1997609
-Node: IPA2002239
-Node: WHOPR2011289
-Node: Internal flags2015849
-Node: Match and Simplify2017260
-Node: GIMPLE API2018222
-Node: The Language2021017
-Node: Static Analyzer2033516
-Node: Analyzer Internals2033781
-Node: Debugging the Analyzer2049668
-Node: User Experience Guidelines2052105
-Node: Guidelines for Diagnostics2053041
-Ref: input_location_example2061216
-Node: Guidelines for Options2070901
-Node: Funding2071078
-Node: GNU Project2073585
-Node: Copying2074234
-Node: GNU Free Documentation License2111745
-Node: Contributors2136866
-Node: Option Index2177842
-Node: Concept Index2178719
+Node: Instruction Output1767293
+Node: Dispatch Tables1777922
+Node: Exception Region Output1783673
+Node: Alignment Output1790755
+Node: Debugging Info1794442
+Node: All Debuggers1795096
+Node: DBX Options1797868
+Node: DBX Hooks1803306
+Node: File Names and DBX1804615
+Node: DWARF1806719
+Node: VMS Debug1812534
+Node: Floating Point1813113
+Node: Mode Switching1815868
+Node: Target Attributes1820305
+Node: Emulated TLS1829781
+Node: MIPS Coprocessors1833171
+Node: PCH Target1834330
+Node: C++ ABI1836172
+Node: D Language and ABI1840964
+Node: Named Address Spaces1843907
+Node: Misc1849834
+Ref: TARGET_SHIFT_TRUNCATION_MASK1857705
+Node: Host Config1916791
+Node: Host Common1917860
+Node: Filesystem1920234
+Node: Host Misc1924349
+Node: Fragments1926798
+Node: Target Fragment1927993
+Node: Host Fragment1938805
+Node: Collect21939045
+Node: Header Dirs1941681
+Node: Type Information1943104
+Node: GTY Options1946380
+Node: Inheritance and GTY1957639
+Ref: Inheritance and GTY-Footnote-11959204
+Node: User GC1959474
+Node: GGC Roots1963213
+Node: Files1963926
+Node: Invoking the garbage collector1966633
+Node: Troubleshooting1968138
+Node: Plugins1969213
+Node: Plugins loading1970342
+Node: Plugin API1971441
+Node: Plugins pass1979308
+Node: Plugins GC1981279
+Node: Plugins description1982996
+Node: Plugins attr1983532
+Node: Plugins recording1985812
+Node: Plugins gate1986662
+Node: Plugins tracking1987253
+Node: Plugins building1987841
+Node: LTO1991342
+Node: LTO Overview1992214
+Node: LTO object file layout1998041
+Node: IPA2002671
+Node: WHOPR2011721
+Node: Internal flags2016281
+Node: Match and Simplify2017692
+Node: GIMPLE API2018654
+Node: The Language2021449
+Node: Static Analyzer2033948
+Node: Analyzer Internals2034213
+Node: Debugging the Analyzer2050100
+Node: User Experience Guidelines2052537
+Node: Guidelines for Diagnostics2053473
+Ref: input_location_example2061648
+Node: Guidelines for Options2071333
+Node: Funding2071510
+Node: GNU Project2074017
+Node: Copying2074666
+Node: GNU Free Documentation License2112177
+Node: Contributors2137298
+Node: Option Index2178274
+Node: Concept Index2179151
 
 End Tag Table
 
