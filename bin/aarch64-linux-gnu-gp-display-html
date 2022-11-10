@@ -173,7 +173,7 @@ my $thresh = 0;
 $driver_cmd       = "gprofng display html";
 $tool_name        = "gp-display-html";
 #$binutils_version = "2.38.50";
-$binutils_version = "2.38.90";
+$binutils_version = "2.39.0";
 $version_info     = $tool_name . " GNU binutils version " . $binutils_version;
 
 #-------------------------------------------------------------------------------
@@ -6020,6 +6020,12 @@ sub generate_dis_html
                       my $current_value; 
                       my $max_value;
                       $current_value = $current_metrics[$metric];
+#------------------------------------------------------------------------------
+# As part of the padding process, non-breaking spaces may have been inserted
+# in an earlier phase.  Temporarily remove these to make sure that the maximum
+# metric values can be computed.
+#------------------------------------------------------------------------------
+                      $current_value =~ s/&nbsp;//g;
                       if (exists ($max_metric_values[$metric]))
                         {
                           $max_value     = $max_metric_values[$metric];

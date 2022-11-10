@@ -14,5 +14,5 @@ File: dir,	Node: Top	Questo è il nodo più alto dell'albero INFO
 
 * Menu:
 
-Software development
-* gccinstall: (gccinstall).     Installing the GNU Compiler Collection.
+GNU Libraries
+* libitm: (libitm).             GNU Transactional Memory Library

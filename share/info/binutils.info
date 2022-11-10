@@ -1,4 +1,4 @@
-This is binutils.info, produced by makeinfo version 6.7 from
+This is binutils.info, produced by makeinfo version 6.8 from
 binutils.texi.
 
 Copyright (C) 1991-2022 Free Software Foundation, Inc.
@@ -42,7 +42,7 @@ Introduction
 ************
 
 This brief manual contains documentation for the GNU binary utilities
-(GNU Binutils) version 2.38.90:
+(GNU Binutils) version 2.39.0:
 
    This document is distributed under the terms of the GNU Free
 Documentation License version 1.3.  A copy of the license is included in
@@ -6089,35 +6089,35 @@ Binutils Index
 
 Tag Table:
 Node: Top1834
-Node: ar3571
-Node: ar cmdline6905
-Node: ar scripts20221
-Node: nm25907
-Node: objcopy41584
-Node: objdump82432
-Node: ranlib119034
-Node: size120633
-Node: strings124602
-Node: strip130459
-Node: c++filt140301
-Ref: c++filt-Footnote-1146162
-Node: addr2line146268
-Node: windmc152223
-Node: windres155882
-Node: dlltool162452
-Node: def file format175449
-Node: readelf177979
-Node: elfedit197078
-Node: Common Options200504
-Node: Selecting the Target System201538
-Node: Target Selection202466
-Node: Architecture Selection204447
-Node: debuginfod205275
-Node: Reporting Bugs206277
-Node: Bug Criteria207039
-Node: Bug Reporting207592
-Node: GNU Free Documentation License214459
-Node: Binutils Index239619
+Node: ar3570
+Node: ar cmdline6904
+Node: ar scripts20220
+Node: nm25906
+Node: objcopy41583
+Node: objdump82431
+Node: ranlib119033
+Node: size120632
+Node: strings124601
+Node: strip130458
+Node: c++filt140300
+Ref: c++filt-Footnote-1146161
+Node: addr2line146267
+Node: windmc152222
+Node: windres155881
+Node: dlltool162451
+Node: def file format175448
+Node: readelf177978
+Node: elfedit197077
+Node: Common Options200503
+Node: Selecting the Target System201537
+Node: Target Selection202465
+Node: Architecture Selection204446
+Node: debuginfod205274
+Node: Reporting Bugs206276
+Node: Bug Criteria207038
+Node: Bug Reporting207591
+Node: GNU Free Documentation License214458
+Node: Binutils Index239618
 
 End Tag Table
 
