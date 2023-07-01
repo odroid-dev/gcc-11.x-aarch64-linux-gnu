@@ -55,7 +55,7 @@ Introduction
 This manual documents the internals of the GNU compilers, including how
 to port them to new targets and some information about how to write
 front ends for new languages.  It corresponds to the compilers (GCC)
-version 11.3.1.  The use of the GNU compilers is documented in a
+version 11.4.1.  The use of the GNU compilers is documented in a
 separate manual.  *Note Introduction: (gcc)Top.
 
  This manual is mainly a reference manual rather than a tutorial.  It
@@ -46501,8 +46501,9 @@ expression simplified to a simple operand.  Consider for example
 
  which moves the outer 'plus' operation to the inner arms of the
 'vec_cond' expression but only if the actual plus operations both
-simplify.  Note this is currently only supported for code generation
-targeting 'GIMPLE'.
+simplify.  Note that on 'GENERIC' a simple operand means that the result
+satisfies '!EXPR_P' which can be limiting if the operation itself
+simplifies but the remaining operand is an (unrelated) expression.
 
  As intermediate conversions are often optional there is a way to avoid
 the need to repeat patterns both with and without such conversions.
@@ -58306,20 +58307,20 @@ Node: Internal flags2016277
 Node: Match and Simplify2017688
 Node: GIMPLE API2018650
 Node: The Language2021445
-Node: Static Analyzer2033944
-Node: Analyzer Internals2034209
-Node: Debugging the Analyzer2050096
-Node: User Experience Guidelines2052533
-Node: Guidelines for Diagnostics2053469
-Ref: input_location_example2061644
-Node: Guidelines for Options2071329
-Node: Funding2071506
-Node: GNU Project2074013
-Node: Copying2074662
-Node: GNU Free Documentation License2112173
-Node: Contributors2137294
-Node: Option Index2178270
-Node: Concept Index2179147
+Node: Static Analyzer2034061
+Node: Analyzer Internals2034326
+Node: Debugging the Analyzer2050213
+Node: User Experience Guidelines2052650
+Node: Guidelines for Diagnostics2053586
+Ref: input_location_example2061761
+Node: Guidelines for Options2071446
+Node: Funding2071623
+Node: GNU Project2074130
+Node: Copying2074779
+Node: GNU Free Documentation License2112290
+Node: Contributors2137411
+Node: Option Index2178387
+Node: Concept Index2179264
 
 End Tag Table
 
